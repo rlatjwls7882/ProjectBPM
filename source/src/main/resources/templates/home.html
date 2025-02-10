@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu</title>
+</head>
+<body>
+<script th:inline="javascript">
+    var msg = [[${msg}]];
+    if(msg == "login_success") alert("로그인 성공");
+</script>
+<h1>Hello, World!</h1>
+<form action="login">
+    <button type="submit">로그인</button>
+</form>
+</body>
+</html>
