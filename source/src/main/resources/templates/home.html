@@ -1,22 +1,73 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Home</title>
+    <meta name="viewport" charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <title>projectBPM</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        /* 네비게이션 바 속의 글자 */
+        .topnav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        /* 네비게션바 위에 마우스를 올렸을 때 변경되는 색 */
+        .topnav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        /* 회원가입 버튼 */
+        .topnav .register {
+            float: right;
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        /* 로그인 버튼 */
+        .topnav .loginOut {
+            float: right;
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        /* 아디다스 버튼 */
+        .topnav .adidas {
+            float: right;
+            background-color: #333;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
 <script th:inline="javascript">
     var msg = [[${msg}]];
-    if(msg == "login_success") alert("로그인 성공");
-    if(msg == "login_failed") alert("그런 아이디 없음");
-    if(msg == "register_success") alert("회원가입 성공");
+    if(msg == "login_success") alert("로그인에 성공하였습니다.");
+    if(msg == "register_success") alert("회원가입에 성공하였습니다. \n로그인을 진행해주세요.");
+    if(msg=="logout_success") alert("로그아웃 되었습니다.");
 </script>
-<h1>Hello, World!</h1>
-<form action="login">
-    <button type="submit">로그인</button>
-</form>
-<form action="register">
-    <button type="submit">회원가입</button>
-</form>
+<div class="topnav" id="myTopnav">
+    <a href="#adidasBtn" class="adidas" onclick="">
+        <i class="fa fa-bars"></i>
+    </a>
+    <div th:if="${isLogin}">
+        <a href="#" class="register">회원정보</a>
+        <a href="logout" class="loginOut">로그아웃</a>
+    </div>
+    <div th:if="!${isLogin}">
+        <a href="register" class="register">회원가입</a>
+        <a href="login" class="loginOut">로그인</a>
+    </div>
+</div>
+<br> <h1>project BPM</h1>
 </body>
 </html>

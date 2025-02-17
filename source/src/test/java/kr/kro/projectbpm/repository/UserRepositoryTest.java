@@ -8,6 +8,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static kr.kro.projectbpm.EncodePassword.encodePassword;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -21,7 +22,7 @@ class UserRepositoryTest {
     public void insertUser() {
         User user = new User();
         user.setId("aaa");
-        user.setPassword("bbb");
+        user.setPassword(encodePassword("bbb"));
         user.setName("A");
         user.setEmail("aaa@aaa.com");
         userRepository.save(user);
