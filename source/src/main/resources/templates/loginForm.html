@@ -72,13 +72,13 @@
         </label>
         <button type="submit">로그인</button>
         <label>
-            <input type="checkbox" name=remember th:checked="${(not #strings.isEmpty(id) ? 'true' : 'false')}">아이디 기억하기<br>
+            <input type="checkbox" name=remember th:checked="${(not #strings.isEmpty(id) ? 'true' : 'false')}">아이디 기억하기
+            <span class="bottom">
+                <a href="#" class="searchId">아이디 찾기</a>
+                <a href="#" class="searchPwd">비밀번호 찾기</a>
+                <a href="/register" class="register">회원가입</a>
+            </span>
         </label>
-        <div class="bottom">
-            <a href="#" class="searchId">아이디 찾기</a>
-            <a href="#" class="searchPwd">비밀번호 찾기</a>
-            <a href="/register" class="register">회원가입</a>
-        </div>
     </div>
 </form>
 <script>
