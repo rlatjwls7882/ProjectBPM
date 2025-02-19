@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 public class User {
     @Id
     private String id;
-    private long password;
+    private String password;
     private String name;
     private String email;
 
@@ -29,11 +29,11 @@ public class User {
         this.id = id;
     }
 
-    public long getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(long password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 

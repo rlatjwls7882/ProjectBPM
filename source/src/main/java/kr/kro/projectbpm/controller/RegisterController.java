@@ -1,20 +1,19 @@
 package kr.kro.projectbpm.controller;
 
 import kr.kro.projectbpm.domain.User;
-import kr.kro.projectbpm.repository.UserRepository;
+import kr.kro.projectbpm.service.EncodeService;
 import kr.kro.projectbpm.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static kr.kro.projectbpm.EncodePassword.encodePassword;
-
 @Controller
+@RequiredArgsConstructor
 public class RegisterController {
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+    private final EncodeService encodeService;
 
     @GetMapping("/register")
     public String register() {
@@ -22,18 +21,12 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public String register(String id, String password, String name, String email, RedirectAttributes redirectAttributes) {
-        User user = new User();
-        user.setId(id);
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(encodePassword(password));
-
-        System.out.println("user = " + user);
-        if(userService.existsUser(id)) {
+    public String register(User user, RedirectAttributes redirectAttributes) {
+        if(userService.existsUser(user.getId())) {
             redirectAttributes.addFlashAttribute("msg", "register_failed");
-            return "redirect:/resister";
+            return "redirect:/register";
         } else {
+            user.setPassword(encodeService.encodePassword(user.getPassword()));
             userService.save(user);
             redirectAttributes.addFlashAttribute("msg", "register_success");
             return "redirect:/";

@@ -5,21 +5,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kr.kro.projectbpm.domain.User;
-import kr.kro.projectbpm.repository.UserRepository;
+import kr.kro.projectbpm.service.EncodeService;
 import kr.kro.projectbpm.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static kr.kro.projectbpm.EncodePassword.encodePassword;
-
 @Controller
+@RequiredArgsConstructor
 public class LoginController {
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+    private final EncodeService encodeService;
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
@@ -36,7 +35,7 @@ public class LoginController {
     public String login(String id, String password, boolean remember, RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response) {
         User user = userService.getUser(id);
         System.out.println("user = " + user);
-        if(user!=null && encodePassword(password) == user.getPassword()) {
+        if(user!=null && encodeService.encodePassword(password).equals(user.getPassword())) {
             /* 로그인 정보 저장 */
             HttpSession session = request.getSession();
             session.setAttribute("id", user.getId());
