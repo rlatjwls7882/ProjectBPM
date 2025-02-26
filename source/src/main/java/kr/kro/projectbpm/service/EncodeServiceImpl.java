@@ -13,4 +13,11 @@ public class EncodeServiceImpl implements EncodeService {
         }
         return Long.toString(result);
     }
+
+    @Override
+    public String encodeId(String id) {
+        String result = id.substring(0, id.length()/2);
+        while(result.length()<id.length()) result += '*';
+        return result;
+    }
 }

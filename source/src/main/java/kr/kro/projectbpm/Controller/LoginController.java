@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -21,6 +22,11 @@ public class LoginController {
     private final EncodeService encodeService;
 
     @GetMapping("/login")
+    public String login() {
+        return "forward:/login/login";
+    }
+
+    @GetMapping("/login/login")
     public String login(HttpServletRequest request, Model model) {
         Cookie[] cookies = request.getCookies();
         for(Cookie cookie : cookies) {
@@ -28,12 +34,24 @@ public class LoginController {
                 model.addAttribute("id", cookie.getValue());
             }
         }
-        return "loginForm";
+        return "login/loginForm";
+    }
+
+    @GetMapping("/login/changePassword")
+    public String changePassword(@RequestParam(value = "searchPasswordForm-id", defaultValue = "a") String id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            if(!userService.existsById(id)) throw new Exception();
+            model.addAttribute("user", userService.getUserById(id));
+        } catch(Exception e) {
+            redirectAttributes.addFlashAttribute("msg", "not_exist_id");
+            return "redirect:/login";
+        }
+        return "login/changePassword";
     }
 
     @PostMapping("/login")
     public String login(String id, String password, boolean remember, RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response) {
-        User user = userService.getUser(id);
+        User user = userService.getUserById(id);
         System.out.println("user = " + user);
         if(user!=null && encodeService.encodePassword(password).equals(user.getPassword())) {
             /* 로그인 정보 저장 */

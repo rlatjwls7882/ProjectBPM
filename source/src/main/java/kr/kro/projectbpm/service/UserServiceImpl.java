@@ -9,14 +9,30 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+
     @Override
-    public User getUser(String id) {
+    public User getUserById(String id) {
         return userRepository.findById(id).orElse(null);
     }
 
     @Override
-    public boolean existsUser(String id) {
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public boolean existsById(String id) {
         return userRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return userRepository.existsByName(name);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override

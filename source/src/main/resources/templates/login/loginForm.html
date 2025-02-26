@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <title>로그인</title>
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+
+        /* input 필드 */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        /* 버튼 스타일 */
+        button {
+            background-color: #333;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            padding: 16px;
+        }
+
+        .bottom {
+            float: right;
+        }
+
+        .bottom a {
+            text-decoration-line: none;
+            color: #5e5a5a;
+        }
+
+        .codeId {
+            display: none;
+        }
+
+        /* 상자 스타일 */
+        .box {
+            background-color: #fefefe;
+            margin: 15% auto 15% auto;
+            border: 1px solid #888;
+            width: 600px;
+        }
+
+        /* 창 바깥은 흐리게 */
+        .searchIdForm, .searchPasswordForm {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        /* 창 안쪽 스타일 */
+        .searchIdForm-content, .searchPasswordForm-content {
+            background-color: #fefefe;
+            margin: 5% auto 15% auto;
+            border: 1px solid #888;
+            width: 500px;
+        }
+
+        /* x 버튼 */
+        .closeContainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 25px;
+            top: 0;
+            color: #000;
+            font-size: 35px;
+            font-weight: bold;
+        }
+
+        .close:hover, .close:focus {
+            color: red;
+            cursor: pointer;
+        }
+
+        /* 애니메이션 추가 */
+        .animate {
+            -webkit-animation: animatezoom 0.6s;
+            animation: animatezoom 0.6s
+        }
+
+        @-webkit-keyframes animatezoom {
+            from {-webkit-transform: scale(0)}
+            to {-webkit-transform: scale(1)}
+        }
+
+        @keyframes animatezoom {
+            from {transform: scale(0)}
+            to {transform: scale(1)}
+        }
+    </style>
+</head>
+<body>
+<script th:inline="javascript">
+    var msg = [[${msg}]];
+    if(msg === "login_failed") alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+    if(msg === "not_exist_id") alert("존재하지 않는 아이디입니다.")
+</script>
+<form class="box" action="" method="post" onsubmit="return formCheck(this)">
+    <div class="container">
+        <div id="error_msg"></div>
+        <label>
+            <b>아이디</b>
+            <input type="text" name="id" placeholder="아이디를 입력하세요" th:value="${id}"><br>
+        </label>
+        <label>
+            <b>비밀번호</b>
+            <input type="password" placeholder="비밀번호를 입력하세요" name="password"><br>
+        </label>
+        <button type="submit">로그인</button>
+        <label>
+            <input type="checkbox" name=remember th:checked="${(not #strings.isEmpty(id) ? 'true' : 'false')}">아이디 기억하기
+            <span class="bottom">
+                <a href="#" class="searchId" onclick="document.getElementById('searchIdForm').style.display='block'" style="width:auto;">아이디 찾기</a>
+                <a href="#" class="searchPwd" onclick="document.getElementById('searchPasswordForm').style.display='block'" style="width:auto;">비밀번호 찾기</a>
+                <a href="/register" class="register">회원가입</a>
+            </span>
+        </label>
+    </div>
+</form>
+<!-- 아이디 찾기 폼 -->
+<div id="searchIdForm" class="searchIdForm">
+    <div class="searchIdForm-content animate">
+        <div class="closeContainer">
+            <span onclick="document.getElementById('searchIdForm').style.display='none'" class="close" title="종료하기">&times;</span><br>
+        </div>
+        <div class="container">
+            <label>
+                <b>가입된 계정의 이메일을 입력하세요.</b>
+                <input type="text" placeholder="이메일을 입력하세요." id="searchIdForm-email">
+            </label>
+            <button type="button" id="searchId">인증번호 전송</button>
+            <label class="codeId" id="codeId">
+                <input type="text" id="userCodeId" placeholder="인증번호를 입력하세요."><br>
+                <button type="button" id="checkCodeId">인증번호 확인</button>
+            </label>
+            <div id="searchIdForm-id"></div>
+        </div>
+    </div>
+</div>
+<!-- 아이디 찾기 폼 -->
+
+<!-- 비밀번호 찾기 폼 -->
+<form id="searchPasswordForm" class="searchPasswordForm" action="/login/changePassword" onsubmit="return idCheck()">
+    <div class="searchPasswordForm-content animate">
+        <div class="closeContainer">
+            <span onclick="document.getElementById('searchPasswordForm').style.display='none'" class="close" title="종료하기">&times;</span><br>
+        </div>
+        <div class="container">
+            <label>
+                <b>가입된 계정의 아이디를 입력하세요.</b>
+                <input type="text" placeholder="아이디를 입력하세요." id="searchPasswordForm-id" name="searchPasswordForm-id">
+            </label>
+            <button type="submit">다음</button>
+        </div>
+    </div>
+</form>
+<!-- 비밀번호 찾기 폼 -->
+<script>
+    /* 아이디 찾기 */
+    $("#searchId").on("click", function() {
+        $.ajax({
+            url:"/sendCodeForSearchId",
+            type:"post",
+            dataType:"json",
+            data:{"email" : $("#searchIdForm-email").val()},
+            success: function(response) {
+                if(response) {
+                    alert("인증번호를 전송했습니다.");
+                    $("#codeId").css("display", "inline-block");
+                } else {
+                    alert("인증번호 전송에 실패했습니다. 다시 시도해주세요.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error code", error);
+                alert("서버 오류가 발생했습니다. 관리자에게 문의해주세요.")
+            }
+        });
+    })
+    $("#checkCodeId").on("click", function() {
+        $.ajax({
+            url:"/checkCode",
+            type:"post",
+            dataType:"json",
+            data:{"userCode" : $("#userCodeId").val()},
+            success: function(response) {
+                if(response) {
+                    $.ajax({
+                        url:"/searchId",
+                        type:"post",
+                        dataType:"json",
+                        data:{"email" : $("#searchIdForm-email").val()},
+                        success: function(response) {
+                            $("#codeId").css("display", "none");
+                            if(response.success) {
+                                document.getElementById("searchIdForm-id").innerHTML = `<h3 style="text-align: center;">당신의 아이디는: ` + response.id + `</h3>`;
+                            } else {
+                                document.getElementById("searchIdForm-id").innerHTML = `<h3 style="text-align: center;">해당 이메일에 대한 아이디는 존재하지 않습니다.</h3>`;
+                            }
+                        },
+                    });
+                } else {
+                    alert("인증번호가 일치하지 않습니다.");
+                }
+            },
+        });
+    })
+    /* 아이디 찾기 */
+
+    /* 아이디가 존재하는지 확인 */
+    document.getElementById("searchPasswordForm").onsubmit = async function(event) {
+        event.preventDefault();  // 기본 폼 제출 방지
+
+        let isValid = await idCheck();
+        if (isValid) {
+            this.submit();  // 아이디가 존재하면 폼 제출
+        }
+    };
+
+    function idCheck() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: "/idCheck",
+                type: "post",
+                dataType: "json",
+                data: { "id": $("#searchPasswordForm-id").val() },
+                success: function(response) {
+                    if (!response) {
+                        alert("입력하신 아이디를 찾을 수 없습니다.");
+                        resolve(false);
+                    } else {
+                        resolve(true);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error code", error);
+                    alert("서버 오류가 발생했습니다. 관리자에게 문의해주세요.");
+                    reject(error);
+                }
+            });
+        });
+    }
+    /* 아이디가 존재하는지 확인 */
+
+    /* 필수적으로 채워야하는 곳 확인 */
+    function formCheck(form) {
+        if(form.id.value.length<1) {
+            setMessage('아이디를 입력해주세요', form.id)
+            return false;
+        }
+        if(form.password.value.length<1) {
+            setMessage('비밀번호를 입력해주세요', form.password)
+            return false;
+        }
+        return true;
+    }
+    function setMessage(msg, element){
+        document.getElementById("error_msg").style.color = "#db0d36";
+        document.getElementById("error_msg").innerHTML = `<i class="fa fa-exclamation-circle"> ${msg} </i>`;
+        element.select();
+    }
+    /* 필수적으로 채워야하는 곳 확인 */
+
+    /* 아이디찾기, 비밀번호 찾기: 창 바깥을 클릭하면 꺼지게 설정 */
+    var searchIdForm = document.getElementById('searchIdForm');
+    var searchPasswordForm = document.getElementById('searchPasswordForm');
+
+    window.onclick = function(event) {
+        if(event.target === searchIdForm) {
+            searchIdForm.style.display = "none";
+        }
+        if(event.target === searchPasswordForm) {
+            searchPasswordForm.style.display = "none";
+        }
+    }
+    /* 아이디찾기, 비밀번호 찾기: 창 바깥을 클릭하면 꺼지게 설정 */
+</script>
+</body>
+</html>

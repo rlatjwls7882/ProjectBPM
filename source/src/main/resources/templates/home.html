@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <title>Home</title>
+    <title>홈</title>
     <style>
         body {
             margin: 0;
@@ -51,9 +51,10 @@
 <body>
 <script th:inline="javascript">
     var msg = [[${msg}]];
-    if(msg == "login_success") alert("로그인에 성공하였습니다.");
-    if(msg == "register_success") alert("회원가입에 성공하였습니다. \n로그인을 진행해주세요.");
-    if(msg=="logout_success") alert("로그아웃 되었습니다.");
+    if(msg === "login_success") alert("로그인에 성공하였습니다.");
+    if(msg === "register_success") alert("회원가입에 성공하였습니다. \n로그인을 진행해주세요.");
+    if(msg === "change_password_success") alert("비밀번호가 성공적으로 변경되었습니다.\n로그인을 진행해주세요.");
+    if(msg === "logout_success") alert("로그아웃 되었습니다.");
 </script>
 <div class="topnav" id="myTopnav">
     <a href="#adidasBtn" class="adidas" onclick="">

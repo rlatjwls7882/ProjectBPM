@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <title>회원가입</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; display: flex; position: relative; }
+
+        /* 회원가입 > 정보 입력 */
+        .title-box {
+            width: 100%;
+            background: black;
+            color: white;
+            padding: 20px;
+            font-size: 15px;
+            font-weight: bold;
+            position: absolute;
+            top: 40px;
+            left: 0;
+            height: 20px;
+        }
+
+        /* 왼쪽 도형 */
+        .diagram-container { display: flex; flex-direction: column; align-items: center; position: relative; }
+        .diagram { width: 200px; padding-right: 30px; text-align: center; display: flex; flex-direction: column; align-items: center; margin-top: 100px; }
+        .step {
+            width: 120px;
+            height: 120px;
+            background: white;
+            color: black;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin: 10px;
+            border: 2px solid black;
+        }
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid black;
+            margin: 10px 0;
+        }
+        .step:nth-child(3) { background: lightgray; }
+
+        /* 내용 */
+        .container { flex: 1; max-width: 600px; border-left: 3px solid black; padding-left: 30px; margin-top: 100px; }
+
+        /* input 필드 */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        /* 버튼 스타일 */
+        button {
+            background-color: #333;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            padding: 16px;
+        }
+    </style>
+</head>
+<body>
+<script th:inline="javascript">
+    var msg = [[${msg}]];
+    if(msg === "register_failed") alert("회원가입에 실패하였습니다.\n다시 시도해주세요.");
+</script>
+<div class="title-box">회원가입 > 정보 입력</div>
+<div class="diagram-container">
+    <div class="diagram">
+        <div class="step">약관 동의</div>
+        <div class="arrow"></div>
+        <div class="step">정보 입력</div>
+        <div class="arrow"></div>
+        <div class="step">가입 완료</div>
+    </div>
+</div>
+
+<form class="box" action="/register" method="post" onsubmit="return formCheck(this)">
+    <div class="container">
+        <div id="error_msg"></div>
+        <b>아이디</b>
+        <label style="display: flex; gap: 20px;">
+            <input type="text" id="id" name="id" placeholder="아이디는 5글자 이상이어야 합니다." style="flex: 7"/>
+            <button type="button" id="idDuplicationCheck" style="flex: 3">중복 아이디 확인</button>
+        </label>
+        <label>
+            <b>비밀번호</b>
+            <input type="password" name="password" placeholder="비밀번호는 알파벳과 숫자를 포함한 3글자 이상이어야 합니다." />
+            <input type="password" name="passwordCheck" placeholder="비밀번호를 다시한번 입력하세요." />
+        </label>
+        <b>이름</b>
+        <label style="display: flex; gap: 20px">
+            <input type="text" id="name" name="name" placeholder="사용하실 이름을 입력하세요." style="flex: 7"/>
+            <button type="button" id="nameDuplicationCheck" style="flex: 3">중복 이름 확인</button>
+        </label>
+        <b>이메일</b>
+        <label style="display: flex; gap: 20px">
+            <input type="text" id="email" name="email" placeholder="이메일을 입력하세요." style="flex: 7">
+            <button type="button" id="sendCode" style="flex: 3">인증번호 전송</button>
+        </label>
+        <label class="code" id="code" style="display: none; gap: 20px">
+            <input type="text" id="userCode" placeholder="인증번호를 입력하세요." style="flex: 7">
+            <button type="button" id="checkCode" style="flex: 3">인증번호 확인</button>
+        </label>
+        <button type="submit">회원가입</button>
+    </div>
+</form>
+<script>
+    /* 이름 중복 확인 */
+    let permittedName = "";
+    $("#nameDuplicationCheck").on("click", function() {
+        $.ajax({
+            url:"/nameDuplicationCheck",
+            type:"post",
+            dataType:"json",
+            data:{"name" : $("#name").val()},
+            success: function(response) {
+                if(response) {
+                    alert("사용 가능한 이름입니다.");
+                    permittedName = $("#name").val();
+                } else {
+                    alert("이미 사용중인 이름입니다.");
+                }
+            },
+        });
+    })
+    /* 이름 중복 확인 */
+
+    /* 아이디 중복 확인 */
+    let permittedId = "";
+    $("#idDuplicationCheck").on("click", function() {
+        $.ajax({
+            url:"/idDuplicationCheck",
+            type:"post",
+            dataType:"json",
+            data:{"id" : $("#id").val()},
+            success: function(response) {
+                if(response) {
+                    alert("사용 가능한 아이디입니다.");
+                    permittedId = $("#id").val();
+                } else {
+                    alert("이미 사용중인 아이디입니다.");
+                }
+            },
+        });
+    })
+    /* 아이디 중복 확인 */
+
+    /* 인증번호 전송 */
+    $("#sendCode").on("click", function() {
+        $.ajax({
+            url:"/emailDuplicationCheck",
+            type:"post",
+            dataType:"json",
+            data:{"email" : $("#email").val()},
+            success: function(response) {
+                if(response) {
+                    $.ajax({
+                        url:"/sendCodeForRegister",
+                        type:"post",
+                        dataType:"json",
+                        data:{"email" : $("#email").val(), "id" : $("#id").val()},
+                        success: function(response) {
+                            if(response) {
+                                $("#code").css("display", "flex");
+                                alert("인증번호를 전송했습니다.");
+                            } else {
+                                alert("인증번호 전송에 실패했습니다. 다시 시도해주세요.");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error code", error);
+                            alert("서버 오류가 발생했습니다. 관리자에게 문의해주세요.")
+                        }
+                    });
+                } else {
+                    alert("중복된 이메일입니다.\n다른 이메일을 이용해주세요.")
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error code", error);
+                alert("서버 오류가 발생했습니다. 관리자에게 문의해주세요.")
+            }
+        });
+    })
+    /* 인증번호 전송 */
+
+    /* 인증번호 확인 */
+    let emailChecked=false;
+    $("#checkCode").on("click", function() {
+        $.ajax({
+            url:"/checkCode",
+            type:"post",
+            dataType:"json",
+            data:{"userCode" : $("#userCode").val()},
+            success: function(response) {
+                if(response) {
+                    $("#code").css("display", "none");
+                    alert("이메일 인증에 성공했습니다.");
+                    emailChecked=true;
+                } else {
+                    alert("인증번호가 일치하지 않습니다.");
+                }
+            },
+        });
+    })
+    /* 인증번호 확인 */
+
+    /* 필수적으로 채워야하는 곳 확인 */
+    function formCheck(form) {
+        if(form.id.value.length<5) {
+            setMessage('아이디는 5글자 이상이어야 합니다.', form.id);
+            return false;
+        }
+
+        let num=false, alphabet=false;
+        for(let i=0;i<form.password.value.length;i++) {
+            if('0'<=form.password.value[i]&&form.password.value[i]<='9') {
+                num=true
+            } else if('a'<=form.password.value[i]&&form.password.value[i]<='z'||'Z'<=form.password.value[i]&&form.password.value[i]<='Z') {
+                alphabet=true
+            }
+        }
+        if(form.password.value.length<3 || !num || !alphabet) {
+            setMessage('비밀번호는 알파벳과 숫자를 포함한 3글자 이상이어야 합니다.', form.password);
+            return false;
+        }
+        if(form.password.value !== form.passwordCheck.value) {
+            setMessage('비밀번호가 일치하지 않습니다.', form.passwordCheck);
+            return false;
+        }
+        if(form.name.value.length<1) {
+            setMessage('이름을 입력해주세요.', form.name);
+            return false;
+        }
+        if(form.email.value.length<1) {
+            setMessage('이메일을 입력해주세요.', form.email);
+            return false;
+        }
+        if(permittedId !== form.id.value) {
+            setMessage('아이디 중복 확인을 해주세요.', form.id);
+            return false;
+        }
+        if(permittedName !== form.name.value) {
+            setMessage('이름 중복 확인을 해주세요.', form.name);
+            return false;
+        }
+        if(!emailChecked) {
+            setMessage('이메일 인증을 진행해주세요.', form.email);
+            return false;
+        }
+        return true;
+    }
+    /* 필수적으로 채워야하는 곳 확인 */
+
+    function setMessage(msg, element){
+        document.getElementById("error_msg").style.color = "#db0d36";
+        document.getElementById("error_msg").innerHTML = `<i class="fa fa-exclamation-circle"> ${msg} </i>`;
+        element.select();
+    }
+</script>
+</body>
+</html>

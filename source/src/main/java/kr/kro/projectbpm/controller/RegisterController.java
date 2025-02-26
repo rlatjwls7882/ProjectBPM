@@ -17,16 +17,27 @@ public class RegisterController {
 
     @GetMapping("/register")
     public String register() {
-        return "registerForm";
+        return "redirect:/register/terms";
+    }
+
+    @GetMapping("/register/terms")
+    public String register1() {
+        return "/register/terms";
+    }
+
+    @GetMapping("/register/register")
+    public String register2() {
+        return "/register/registerForm";
     }
 
     @PostMapping("/register")
     public String register(User user, RedirectAttributes redirectAttributes) {
-        if(userService.existsUser(user.getId())) {
+        if(userService.existsById(user.getId())) {
             redirectAttributes.addFlashAttribute("msg", "register_failed");
-            return "redirect:/register";
+            return "redirect:/register/register";
         } else {
             user.setPassword(encodeService.encodePassword(user.getPassword()));
+            System.out.println("user = " + user);
             userService.save(user);
             redirectAttributes.addFlashAttribute("msg", "register_success");
             return "redirect:/";

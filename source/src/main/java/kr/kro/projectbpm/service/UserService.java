@@ -3,9 +3,15 @@ package kr.kro.projectbpm.service;
 import kr.kro.projectbpm.domain.User;
 
 public interface UserService {
-    User getUser(String id);
+    User getUserById(String id);
 
-    boolean existsUser(String id);
+    User getUserByEmail(String email);
+
+    boolean existsById(String id);
+
+    boolean existsByName(String name);
+
+    boolean existsByEmail(String email);
 
     void save(User user);
 }
