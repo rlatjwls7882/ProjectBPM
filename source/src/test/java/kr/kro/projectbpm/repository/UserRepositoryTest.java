@@ -2,7 +2,6 @@ package kr.kro.projectbpm.repository;
 
 import kr.kro.projectbpm.domain.User;
 import kr.kro.projectbpm.service.EncodeService;
-import kr.kro.projectbpm.service.UserService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -22,11 +21,7 @@ class UserRepositoryTest {
     @Order(1)
     @Test
     public void insertUser() {
-        User user = new User();
-        user.setId("aaa");
-        user.setPassword(encodeService.encodePassword("bbb"));
-        user.setName("A");
-        user.setEmail("aaa@aaa.com");
+        User user = new User("aaa", encodeService.encodePassword("bbb"), "A", "aaa@aaa.com");
         userRepository.save(user);
     }
 

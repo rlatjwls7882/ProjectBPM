@@ -1,77 +1,72 @@
 package kr.kro.projectbpm.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Board {
     @Id
-    private int bno;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "board_num")
+    private Long boardNum;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String content;
-    private String comment;
-    private Date reg_date;
-    private Date up_date;
+
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private Long viewCnt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date inDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date upDate;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    List<View> viewList = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Override
     public String toString() {
         return "Board{" +
-                "bno=" + bno +
+                "bno=" + boardNum +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", comment='" + comment + '\'' +
-                ", reg_date=" + reg_date +
-                ", up_date=" + up_date +
+                ", inDate=" + inDate +
+                ", upDate=" + upDate +
+                ", user=" + user +
                 '}';
     }
 
-    public int getBno() {
-        return bno;
-    }
-
-    public void setBno(int bno) {
-        this.bno = bno;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
+    public Board(String title, String content, User user) {
         this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
         this.content = content;
+        this.user = user;
+        this.viewCnt = 0L;
+        this.inDate = new Date();
+        this.upDate = new Date();
     }
 
-    public String getComment() {
-        return comment;
+    public void read() {
+        this.viewCnt++;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Date getReg_date() {
-        return reg_date;
-    }
-
-    public void setReg_date(Date reg_date) {
-        this.reg_date = reg_date;
-    }
-
-    public Date getUp_date() {
-        return up_date;
-    }
-
-    public void setUp_date(Date up_date) {
-        this.up_date = up_date;
+    public void edit(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.upDate = new Date();
     }
 }

@@ -1,25 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>약관동의</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; display: flex; position: relative; }
-
-        /* 회원가입 > 약관 내용 */
-        .title-box {
-            width: 100%;
-            background: black;
-            color: white;
-            padding: 20px;
-            font-size: 15px;
-            font-weight: bold;
-            position: absolute;
-            top: 40px;
-            left: 0;
-            height: 20px;
-        }
 
         /* 왼쪽 도형 */
         .diagram-container { display: flex; flex-direction: column; align-items: center; position: relative; }
@@ -55,7 +39,8 @@
     </style>
 </head>
 <body>
-<div class="title-box">회원가입 > 약관 동의</div>
+<header th:replace="~{/fragments/header :: fragment-header}"></header>
+
 <div class="diagram-container">
     <div class="diagram">
         <div class="step">약관 동의</div>
@@ -67,6 +52,7 @@
 </div>
 
 <div class="container">
+    <b>서비스 이용 약관 동의</b>
     <div class="checkbox-group">
         <div class="terms-box">
             <h4>서비스 이용 약관 내용...</h4>
@@ -76,6 +62,7 @@
         </div>
         <input type="checkbox" id="agree1"> 서비스 이용 약관 동의 (필수)
     </div>
+    <b>개인정보 처리방침 동의</b>
     <div class="checkbox-group">
         <div class="terms-box">
             <h4>개인정보 처리방침 내용...</h4>
@@ -85,6 +72,7 @@
         </div>
         <input type="checkbox" id="agree2"> 개인정보 처리방침 동의 (필수)
     </div>
+    <b>개인정보 처리 위탁 동의</b>
     <div class="checkbox-group">
         <div class="terms-box">
             <h4>개인정보 처리 위탁 내용...</h4>

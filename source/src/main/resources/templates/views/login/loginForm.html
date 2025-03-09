@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta name="viewport" charset="UTF-8">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <title>로그인</title>
     <style>
         body {font-family: Arial, Helvetica, sans-serif;}
@@ -43,11 +40,8 @@
 
         .bottom a {
             text-decoration-line: none;
+            padding: 3px;
             color: #5e5a5a;
-        }
-
-        .codeId {
-            display: none;
         }
 
         /* 상자 스타일 */
@@ -120,12 +114,9 @@
     </style>
 </head>
 <body>
-<script th:inline="javascript">
-    var msg = [[${msg}]];
-    if(msg === "login_failed") alert("아이디 또는 비밀번호가 일치하지 않습니다.");
-    if(msg === "not_exist_id") alert("존재하지 않는 아이디입니다.")
-</script>
-<form class="box" action="" method="post" onsubmit="return formCheck(this)">
+<header th:replace="~{/fragments/header :: fragment-header}"></header>
+
+<form class="box" action="/login" method="post" onsubmit="return formCheck(this)">
     <div class="container">
         <div id="error_msg"></div>
         <label>
@@ -140,9 +131,9 @@
         <label>
             <input type="checkbox" name=remember th:checked="${(not #strings.isEmpty(id) ? 'true' : 'false')}">아이디 기억하기
             <span class="bottom">
-                <a href="#" class="searchId" onclick="document.getElementById('searchIdForm').style.display='block'" style="width:auto;">아이디 찾기</a>
-                <a href="#" class="searchPwd" onclick="document.getElementById('searchPasswordForm').style.display='block'" style="width:auto;">비밀번호 찾기</a>
-                <a href="/register" class="register">회원가입</a>
+                <b><a href="#" class="searchId" onclick="document.getElementById('searchIdForm').style.display='block'" style="width:auto;">아이디 찾기</a></b>
+                <b><a href="#" class="searchPwd" onclick="document.getElementById('searchPasswordForm').style.display='block'" style="width:auto;">비밀번호 찾기</a></b>
+                <b><a href="/register" class="register">회원가입</a></b>
             </span>
         </label>
     </div>
@@ -159,7 +150,7 @@
                 <input type="text" placeholder="이메일을 입력하세요." id="searchIdForm-email">
             </label>
             <button type="button" id="searchId">인증번호 전송</button>
-            <label class="codeId" id="codeId">
+            <label class="codeId" id="codeId" style="display: none;">
                 <input type="text" id="userCodeId" placeholder="인증번호를 입력하세요."><br>
                 <button type="button" id="checkCodeId">인증번호 확인</button>
             </label>
@@ -189,10 +180,10 @@
     /* 아이디 찾기 */
     $("#searchId").on("click", function() {
         $.ajax({
-            url:"/sendCodeForSearchId",
+            url:"/sendCode",
             type:"post",
             dataType:"json",
-            data:{"email" : $("#searchIdForm-email").val()},
+            data:{"email" : $("#searchIdForm-email").val(), "type" : "searchId"},
             success: function(response) {
                 if(response) {
                     alert("인증번호를 전송했습니다.");

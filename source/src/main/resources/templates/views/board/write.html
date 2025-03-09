@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>글쓰기</title>
+    <style>
+        /* 버튼 스타일 */
+        button {
+            background-color: #333;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        /* 게시물 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Noto Sans KR", sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .board-container {
+            width: 60%;
+            height: 1200px;
+            margin: 0 auto;
+        }
+
+        .board-item {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        input[type=text], textarea {
+            width: 100%;
+            height: fit-content;
+            padding: 12px 20px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="~{/fragments/header :: fragment-header}"></header>
+<div th:replace="~{/fragments/nav :: fragment-nav}"></div>
+
+<div class="board-container">
+    <div class="board-item">
+        <form action="/write" method="post">
+            <label>
+                <input type="text" class="title" name="title" placeholder="제목을 입력해주세요." required th:value="${title}" /><br>
+                <textarea name="content" rows="10" placeholder="내용을 입력해주세요." required th:text="${content}" />
+            </label>
+            <button>제출</button>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const contentTextarea = document.querySelector("textarea[name='content']");
+
+        // 마우스로 크기 조절하는 것 방지
+        contentTextarea.style.resize = "none";
+
+        // 스크롤 없애기
+        contentTextarea.style.overflow = "hidden";
+
+        // 내용이 11줄 이상 입력하면 높이 자동 조절
+        contentTextarea.addEventListener("input", function () {
+            this.style.height = "auto";
+            this.style.height = this.scrollHeight + "px";
+        });
+    });
+</script>
+</body>
+</html>

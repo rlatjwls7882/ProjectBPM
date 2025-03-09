@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="fragment-header">
+    <title>fragment-header</title>
+    <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <script src="https://use.fontawesome.com/releases/v6.7.2/js/all.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script th:inline="javascript">
+        var msg = [[${msg}]];
+        if(msg === "login_success") alert("로그인에 성공하였습니다.");
+        if(msg === "login_failed") alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+        if(msg === "register_success") alert("회원가입에 성공하였습니다.\n로그인을 진행해주세요.");
+        if(msg === "register_failed") alert("회원가입에 실패하였습니다.\n다시 시도해주세요.");
+        if(msg === "change_password_success") alert("비밀번호가 성공적으로 변경되었습니다.\n로그인을 진행해주세요.");
+        if(msg === "logout_success") alert("로그아웃 되었습니다.");
+        if(msg === "read_failed") alert("게시물을 읽어오는데 실패했습니다.");
+        if(msg === "write_success") alert("게시물이 등록되었습니다.");
+        if(msg === "write_failed") alert("게시물 등록에 실패하였습니다.");
+        if(msg === "delete_success") alert("게시물이 삭제되었습니다.");
+        if(msg === "delete_failed") alert("게시물 삭제에 실패했습니다.");
+        if(msg === "not_exist_id") alert("존재하지 않는 아이디입니다.");
+        if(msg === "edit_success") alert("게시물을 수정되었습니다.");
+        if(msg === "edit_failed") alert("게시물 수정에 실패했습니다.");
+        if(msg === "change_password_failed") alert("비밀번호 변경에 실패했습니다.\n다시 시도해주세요.");
+    </script>
+</head>
+</html>

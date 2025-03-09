@@ -55,7 +55,7 @@ public class UserController {
     public String changePassword(String id, String password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         try {
             userService.getUserById(id)
-                    .setPassword(encodeService.encodePassword(password));
+                    .changePassword(encodeService.encodePassword(password));
             redirectAttributes.addFlashAttribute("msg", "change_password_success");
             return "redirect:/";
         } catch (Exception e) {

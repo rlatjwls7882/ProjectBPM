@@ -1,17 +1,20 @@
 package kr.kro.projectbpm.controller;
 
-import jakarta.servlet.http.HttpSession;
+import kr.kro.projectbpm.service.BoardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
+    private final BoardService boardService;
+
     @GetMapping("/")
-    public String home(HttpSession session, Model model) {
-        if(session.getAttribute("id")!=null) {
-            model.addAttribute("isLogin", true);
-        }
-        return "home";
+    public String home(Model model) {
+        model.addAttribute("list", boardService.getLists());
+        model.addAttribute("sort", "latest");
+        return "views/home";
     }
 }

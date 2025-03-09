@@ -17,26 +17,29 @@ public class RegisterController {
 
     @GetMapping("/register")
     public String register() {
-        return "redirect:/register/terms";
+        return "forward:/register/terms";
     }
 
     @GetMapping("/register/terms")
     public String register1() {
-        return "/register/terms";
+        return "views/register/terms";
     }
 
     @GetMapping("/register/register")
     public String register2() {
-        return "/register/registerForm";
+        return "views/register/registerForm";
     }
 
     @PostMapping("/register")
     public String register(User user, RedirectAttributes redirectAttributes) {
         if(userService.existsById(user.getId())) {
             redirectAttributes.addFlashAttribute("msg", "register_failed");
+            redirectAttributes.addFlashAttribute("id", user.getId());
+            redirectAttributes.addFlashAttribute("name", user.getName());
+            redirectAttributes.addFlashAttribute("email", user.getEmail());
             return "redirect:/register/register";
         } else {
-            user.setPassword(encodeService.encodePassword(user.getPassword()));
+            user.changePassword(encodeService.encodePassword(user.getPassword()));
             System.out.println("user = " + user);
             userService.save(user);
             redirectAttributes.addFlashAttribute("msg", "register_success");

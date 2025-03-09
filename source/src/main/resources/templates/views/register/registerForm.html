@@ -1,26 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta name="viewport" charset="UTF-8">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <title>회원가입</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; display: flex; position: relative; }
-
-        /* 회원가입 > 정보 입력 */
-        .title-box {
-            width: 100%;
-            background: black;
-            color: white;
-            padding: 20px;
-            font-size: 15px;
-            font-weight: bold;
-            position: absolute;
-            top: 40px;
-            left: 0;
-            height: 20px;
-        }
 
         /* 왼쪽 도형 */
         .diagram-container { display: flex; flex-direction: column; align-items: center; position: relative; }
@@ -82,11 +65,8 @@
     </style>
 </head>
 <body>
-<script th:inline="javascript">
-    var msg = [[${msg}]];
-    if(msg === "register_failed") alert("회원가입에 실패하였습니다.\n다시 시도해주세요.");
-</script>
-<div class="title-box">회원가입 > 정보 입력</div>
+<header th:replace="~{/fragments/header :: fragment-header}"></header>
+
 <div class="diagram-container">
     <div class="diagram">
         <div class="step">약관 동의</div>
@@ -102,7 +82,7 @@
         <div id="error_msg"></div>
         <b>아이디</b>
         <label style="display: flex; gap: 20px;">
-            <input type="text" id="id" name="id" placeholder="아이디는 5글자 이상이어야 합니다." style="flex: 7"/>
+            <input type="text" id="id" name="id" placeholder="아이디는 5글자 이상이어야 합니다." style="flex: 7" th:value="${id}" />
             <button type="button" id="idDuplicationCheck" style="flex: 3">중복 아이디 확인</button>
         </label>
         <label>
@@ -112,16 +92,16 @@
         </label>
         <b>이름</b>
         <label style="display: flex; gap: 20px">
-            <input type="text" id="name" name="name" placeholder="사용하실 이름을 입력하세요." style="flex: 7"/>
+            <input type="text" id="name" name="name" placeholder="사용하실 이름을 입력하세요." style="flex: 7" th:value="${name}" />
             <button type="button" id="nameDuplicationCheck" style="flex: 3">중복 이름 확인</button>
         </label>
         <b>이메일</b>
         <label style="display: flex; gap: 20px">
-            <input type="text" id="email" name="email" placeholder="이메일을 입력하세요." style="flex: 7">
+            <input type="text" id="email" name="email" placeholder="이메일을 입력하세요." style="flex: 7" th:value="${email}" />
             <button type="button" id="sendCode" style="flex: 3">인증번호 전송</button>
         </label>
         <label class="code" id="code" style="display: none; gap: 20px">
-            <input type="text" id="userCode" placeholder="인증번호를 입력하세요." style="flex: 7">
+            <input type="text" id="userCode" placeholder="인증번호를 입력하세요." style="flex: 7" />
             <button type="button" id="checkCode" style="flex: 3">인증번호 확인</button>
         </label>
         <button type="submit">회원가입</button>
@@ -178,10 +158,10 @@
             success: function(response) {
                 if(response) {
                     $.ajax({
-                        url:"/sendCodeForRegister",
+                        url:"/sendCode",
                         type:"post",
                         dataType:"json",
-                        data:{"email" : $("#email").val(), "id" : $("#id").val()},
+                        data:{"email" : $("#email").val(), "id" : $("#id").val(), "type" : "register"},
                         success: function(response) {
                             if(response) {
                                 $("#code").css("display", "flex");

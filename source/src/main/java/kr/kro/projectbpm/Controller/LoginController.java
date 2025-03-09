@@ -34,7 +34,7 @@ public class LoginController {
                 model.addAttribute("id", cookie.getValue());
             }
         }
-        return "login/loginForm";
+        return "views/login/loginForm";
     }
 
     @GetMapping("/login/changePassword")
@@ -46,7 +46,7 @@ public class LoginController {
             redirectAttributes.addFlashAttribute("msg", "not_exist_id");
             return "redirect:/login";
         }
-        return "login/changePassword";
+        return "views/login/changePassword";
     }
 
     @PostMapping("/login")
@@ -68,7 +68,13 @@ public class LoginController {
             /* 아이디 저장 */
 
             redirectAttributes.addFlashAttribute("msg", "login_success");
-            return "redirect:/";
+            if(session.getAttribute("beforeURL") != null) {
+                String beforeURL = (String) session.getAttribute("beforeURL");
+                session.removeAttribute("beforeURL");
+                return "redirect:"+beforeURL;
+            } else {
+                return "redirect:/";
+            }
         } else {
             redirectAttributes.addFlashAttribute("msg", "login_failed");
             return "redirect:/login";
