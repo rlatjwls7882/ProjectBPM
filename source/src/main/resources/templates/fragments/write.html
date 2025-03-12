@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="fragment-write">
+    <title>fragment-write</title>
+    <style>
+        /* 게시물 */
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .board-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px 0;
+            box-sizing: border-box;
+        }
+
+        .board-item {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.2s ease-in-out;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const contentTextarea = document.querySelector("textarea[name='content']");
+            contentTextarea.style.resize = "none";
+            contentTextarea.style.overflow = "hidden";
+            contentTextarea.style.height = "auto";
+            contentTextarea.style.height = contentTextarea.scrollHeight + "px";
+
+            document.getElementById("markdown-content").innerHTML = DOMPurify.sanitize(marked.parse(contentTextarea.value));
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+            hljs.initLineNumbersOnLoad();
+
+            contentTextarea.addEventListener("input", function () {
+                this.style.height = "auto";
+                this.style.height = this.scrollHeight + "px";
+                document.getElementById("markdown-content").innerHTML = DOMPurify.sanitize(marked.parse(this.value));
+
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+                hljs.initLineNumbersOnLoad();
+            });
+
+            // 텍스트 영역에 tab 문자 삽입
+            contentTextarea.addEventListener('keydown', function(event) {
+                if (event.key === 'Tab') {
+                    event.preventDefault();
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+
+                    this.value = this.value.substring(0, start) + '\t' + this.value.substring(end);
+
+                    // 커서를 탭 문자 뒤로 이동
+                    this.selectionStart = this.selectionEnd = start + 1;
+                }
+            });
+
+            const titleArea = document.querySelector("input[name='title']");
+            document.getElementById("parsed-title").innerText = titleArea.value;
+            titleArea.addEventListener("input", function () {
+                document.getElementById("parsed-title").innerText = this.value;
+            });
+        });
+    </script>
+</head>
+</html>

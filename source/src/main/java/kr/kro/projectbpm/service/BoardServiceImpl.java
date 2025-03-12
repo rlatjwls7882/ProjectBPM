@@ -47,9 +47,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Board getBoard(long boardNum) {
-        Board board = boardRepository.findByBoardNum(boardNum);
-        board.read();
-        return board;
+        return boardRepository.findByBoardNum(boardNum);
     }
 
     @Override

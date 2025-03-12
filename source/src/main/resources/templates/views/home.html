@@ -103,8 +103,8 @@
     </style>
 </head>
 <body>
-<header th:replace="~{/fragments/header :: fragment-header}"></header>
-<div th:replace="~{/fragments/nav :: fragment-nav}"></div>
+<header th:replace="~{fragments/header :: fragment-header}"></header>
+<div th:replace="~{fragments/nav :: fragment-nav}"></div>
 
 <div class="board-container">
     <form action="search">
@@ -120,7 +120,7 @@
         </div>
     </form>
     <div class="board-item" th:each="board : ${list}" th:attr="onclick='window.location.href=\'/read?boardNum=' + ${board.boardNum} + '\''">
-        <img src="image.png" alt="게시물 이미지">
+        <img src="/images/image.png" alt="게시물 이미지" style="width: 15px; height: 15px;">
         <div class="board-title" th:text="${board.title}">게시물 제목</div>
         <div class="board-meta" th:text="'작성자: ' + ${board.user.id} + ' | 등록일: ' + ${#dates.format(board.upDate,'yyyy-MM-dd hh:mm:ss')} + ' | 조회수: ' + ${board.viewCnt}">작성자: aaa | 등록일: 2025-01-01 10:00:00 | 조회수: 0</div>
     </div>

@@ -8,10 +8,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
-    private final GloberIntercepter globerIntercepter;
+    private final GlobeInterceptor globerInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(globerIntercepter);
+        registry.addInterceptor(globerInterceptor);
     }
 }

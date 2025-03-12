@@ -14,12 +14,22 @@ public class User {
     @Id
     @Column(name = "user_id")
     private String id;
+
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(nullable = false)
+//    private Long userNum;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String email;
 
     @OneToMany(mappedBy = "user")
-    private List<Board> list = new ArrayList<>();
+    private List<Board> boardList = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -27,8 +37,8 @@ public class User {
                 "id='" + id + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
+//                ", userNum='" + userNum + '\'' +
                 ", email='" + email + '\'' +
-//                ", list=" + list +
                 '}';
     }
 

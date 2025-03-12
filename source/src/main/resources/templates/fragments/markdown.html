@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="fragment-markdown">
+    <title>fragment-markdown</title>
+    <!--  마크다운 변환  --> <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Visual Studio Dark 스타일 --> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs2015.min.css">
+    <!-- 코드 하이라이팅 --> <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <!-- 코드 줄 세기 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.css">
+    <style>
+        /* 코드블럭 스타일 */
+        pre {
+            background-color: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 16px;
+            overflow: auto;
+            margin: 16px 0;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        code {
+            font-family: "Source Code Pro", Consolas, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #d4d4d4;
+        }
+
+        /* 줄 번호 */
+        .hljs-ln-numbers {
+            color: #999;
+            text-align: right;
+            border-right: 1px solid #555;
+        }
+        .hljs-ln td.hljs-ln-code {
+            padding-left: 10px;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const rawContent = document.getElementById("raw-content").innerText;
+            document.getElementById("markdown-content").innerHTML = DOMPurify.sanitize(marked.parse(rawContent));
+
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+            hljs.initLineNumbersOnLoad();
+        });
+    </script>
+</head>
+</html>

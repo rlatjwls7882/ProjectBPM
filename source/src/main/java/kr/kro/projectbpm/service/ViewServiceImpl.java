@@ -14,6 +14,7 @@ public class ViewServiceImpl implements ViewService {
 
     @Override
     public void createView(Board board) {
+        board.read();
         View view = new View(board);
         viewRepository.save(view);
     }

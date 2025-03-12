@@ -114,7 +114,7 @@
     </style>
 </head>
 <body>
-<header th:replace="~{/fragments/header :: fragment-header}"></header>
+<header th:replace="~{fragments/header :: fragment-header}"></header>
 
 <form class="box" action="/login" method="post" onsubmit="return formCheck(this)">
     <div class="container">
@@ -214,9 +214,9 @@
                         success: function(response) {
                             $("#codeId").css("display", "none");
                             if(response.success) {
-                                document.getElementById("searchIdForm-id").innerHTML = `<h3 style="text-align: center;">당신의 아이디는: ` + response.id + `</h3>`;
+                                document.getElementById("searchIdForm-id").innerHTML = DOMPurify.sanitize(`<h3 style="text-align: center;">당신의 아이디는: ` + response.id + `</h3>`);
                             } else {
-                                document.getElementById("searchIdForm-id").innerHTML = `<h3 style="text-align: center;">해당 이메일에 대한 아이디는 존재하지 않습니다.</h3>`;
+                                document.getElementById("searchIdForm-id").innerHTML = DOMPurify.sanitize(`<h3 style="text-align: center;">해당 이메일에 대한 아이디는 존재하지 않습니다.</h3>`);
                             }
                         },
                     });
@@ -277,7 +277,7 @@
     }
     function setMessage(msg, element){
         document.getElementById("error_msg").style.color = "#db0d36";
-        document.getElementById("error_msg").innerHTML = `<i class="fa fa-exclamation-circle"> ${msg} </i>`;
+        document.getElementById("error_msg").innerHTML = DOMPurify.sanitize(`<i class="fa fa-exclamation-circle"> ${msg} </i>`);
         element.select();
     }
     /* 필수적으로 채워야하는 곳 확인 */

@@ -18,34 +18,6 @@
             opacity: 0.8;
         }
 
-        /* 게시물 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: "Noto Sans KR", sans-serif;
-        }
-
-        a {
-            text-decoration: none;
-            color: black;
-        }
-
-        .board-container {
-            width: 60%;
-            height: 1200px;
-            margin: 0 auto;
-        }
-
-        .board-item {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: transform 0.2s ease-in-out;
-        }
-
         input[type=text], textarea {
             width: 100%;
             height: fit-content;
@@ -60,8 +32,10 @@
     </style>
 </head>
 <body>
-<header th:replace="~{/fragments/header :: fragment-header}"></header>
-<div th:replace="~{/fragments/nav :: fragment-nav}"></div>
+<header th:replace="~{fragments/header :: fragment-header}"></header>
+<header th:replace="~{fragments/markdown :: fragment-markdown}"></header>
+<div th:replace="~{fragments/nav :: fragment-nav}"></div>
+<div th:replace="~{fragments/write :: fragment-write}"></div>
 
 <div class="board-container">
     <div class="board-item">
@@ -74,23 +48,17 @@
             <button>변경하기</button>
         </form>
     </div>
+    <div class="board-item">
+        <div id="parsed-title" style="font-size: calc(3em * 0.6); font-weight: 900; color: #333; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+margin-bottom: 0.5em;">title</div>
+        <div style="font-size: calc(16px * 0.6)">
+            <div th:text="${'최초 업로드: '+#dates.format(board.inDate,'yyyy-MM-dd hh:mm:ss')}" style="text-align: right;">최초 업로드: yyyy-MM-dd hh:mm:ss</div>
+            <div th:text="${'최근 수정 시간: '+#dates.format(board.upDate,'yyyy-MM-dd hh:mm:ss')}" style="text-align: right;">최근 수정 시간: yyyy-MM-dd hh:mm:ss</div>
+            <div th:text="${'게시자: '+board.user.name}" style="text-align: right;">게시자: none</div>
+            <div th:text="${'조회수: '+board.viewCnt}" style="text-align: right;">조회수: -1</div>
+            <div id="markdown-content" style="white-space: pre-wrap;"></div>
+        </div>
+    </div>
 </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const contentTextarea = document.querySelector("textarea[name='content']");
-
-        // 마우스로 크기 조절하는 것 방지
-        contentTextarea.style.resize = "none";
-
-        // 스크롤 없애기
-        contentTextarea.style.overflow = "hidden";
-
-        // 내용이 11줄 이상 입력하면 높이 자동 조절
-        contentTextarea.addEventListener("input", function () {
-            this.style.height = "auto";
-            this.style.height = this.scrollHeight + "px";
-        });
-    });
-</script>
 </body>
 </html>

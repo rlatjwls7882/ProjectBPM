@@ -20,7 +20,7 @@ public class Board {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10000)
     private String content;
 
     @Column(columnDefinition = "integer default 0", nullable = false)

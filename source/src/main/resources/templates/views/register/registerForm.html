@@ -65,7 +65,7 @@
     </style>
 </head>
 <body>
-<header th:replace="~{/fragments/header :: fragment-header}"></header>
+<header th:replace="~{fragments/header :: fragment-header}"></header>
 
 <div class="diagram-container">
     <div class="diagram">
@@ -257,7 +257,7 @@
 
     function setMessage(msg, element){
         document.getElementById("error_msg").style.color = "#db0d36";
-        document.getElementById("error_msg").innerHTML = `<i class="fa fa-exclamation-circle"> ${msg} </i>`;
+        document.getElementById("error_msg").innerHTML = DOMPurify.sanitize(`<i class="fa fa-exclamation-circle"> ${msg} </i>`);
         element.select();
     }
 </script>
