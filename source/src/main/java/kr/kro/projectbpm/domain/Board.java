@@ -20,7 +20,7 @@ public class Board {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 10000)
+    @Column(nullable = false, length = 200000)
     private String content;
 
     @Column(columnDefinition = "integer default 0", nullable = false)
@@ -33,11 +33,15 @@ public class Board {
     private Date upDate;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    List<View> viewList = new ArrayList<>();
+    private List<View> viewList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name="category_num")
+    private Category category;
 
     @Override
     public String toString() {
@@ -60,13 +64,28 @@ public class Board {
         this.upDate = new Date();
     }
 
+    // for backup data
+    public Board(String title, String content, User user, Long viewCnt, Date inDate, Date upDate) {
+        this.title = title;
+        this.content = content;
+        this.user = user;
+        this.viewCnt = viewCnt;
+        this.inDate = inDate;
+        this.upDate = upDate;
+    }
+
     public void read() {
         this.viewCnt++;
+        this.user.read();
     }
 
     public void edit(String title, String content) {
         this.title = title;
         this.content = content;
         this.upDate = new Date();
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

@@ -13,7 +13,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("list", boardService.getLists());
+        model.addAttribute("boardList", boardService.getLists());
         model.addAttribute("sort", "latest");
         return "views/home";
     }

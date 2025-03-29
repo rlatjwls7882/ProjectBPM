@@ -5,8 +5,9 @@
     <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
     <script src="https://use.fontawesome.com/releases/v6.7.2/js/all.js"></script>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <!--  Jquery  --> <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-    <!--  DOMPurify(XSS 취약점 제거)  --> <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
+    <!--  DOMPurify(innerHtml의 XSS 취약점 보완)  --> <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
     <script th:inline="javascript">
         var msg = [[${msg}]];
         if(msg === "login_success") alert("로그인에 성공하였습니다.");

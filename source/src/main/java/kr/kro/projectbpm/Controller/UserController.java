@@ -1,13 +1,14 @@
 package kr.kro.projectbpm.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import kr.kro.projectbpm.service.EncodeService;
-import kr.kro.projectbpm.service.UserService;
+import kr.kro.projectbpm.dto.CategoryDto;
+import kr.kro.projectbpm.dto.UserDto;
+import kr.kro.projectbpm.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
@@ -16,7 +17,9 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final EncodeService encodeService;
+    private final ViewService viewService;
+    private final BoardService boardService;
+    private final CategoryService categoryService;
 
     @PostMapping("/idDuplicationCheck")
     public ResponseEntity<?> idDuplicationCheck(String id) {
@@ -54,14 +57,48 @@ public class UserController {
     @PostMapping("/changePassword")
     public String changePassword(String id, String password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         try {
-            userService.getUserById(id)
-                    .changePassword(encodeService.encodePassword(password));
+            UserDto userDto = userService.getUserById(id);
+                userService.changePassword(userDto, password);
             redirectAttributes.addFlashAttribute("msg", "change_password_success");
             return "redirect:/";
         } catch (Exception e) {
             System.out.println("request.getRequestURI() = " + request.getRequestURI());
             redirectAttributes.addFlashAttribute("msg", "change_password_failed");
             return "redirect:/login/changePassword?searchPasswordForm-id="+id;
+        }
+    }
+
+    @GetMapping("/{id}")
+    public String myBlog(@PathVariable String id, @RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, Model model) {
+        try {
+            model.addAttribute("boardList", boardService.getLists(sort, query, id));
+            model.addAttribute("query", query);
+            model.addAttribute("sort", sort);
+            UserDto userDto = userService.getUserById(id);
+            userDto.setViewCnt(viewService.getViewCnt(userDto, "today"));
+            model.addAttribute("userDto", userDto);
+            return "views/user/userPage";
+        } catch (Exception e) {
+            return "redirect:/";
+        }
+    }
+
+    @GetMapping("/{id}/category/{categoryNum}")
+    public String myBlogCategory(@PathVariable String id, @PathVariable long categoryNum, @RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, Model model) {
+        try {
+            model.addAttribute("boardList", boardService.getLists(categoryNum, sort));
+            model.addAttribute("query", query);
+            model.addAttribute("sort", sort);
+
+            CategoryDto categoryDto = categoryService.getCategory(categoryNum);
+            model.addAttribute("categoryDto", categoryDto);
+
+            UserDto userDto = userService.getUserById(id);
+            userDto.setViewCnt(viewService.getViewCnt(userDto, "today"));
+            model.addAttribute("userDto", userDto);
+            return "views/user/userPage";
+        } catch (Exception e) {
+            return "redirect:/";
         }
     }
 }

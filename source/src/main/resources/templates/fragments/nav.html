@@ -11,10 +11,6 @@
             text-decoration: none;
             font-size: 17px;
         }
-        .top-nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
         .top-nav .loginOut {
             margin-right: 10px;
             float: right;
@@ -25,7 +21,7 @@
         }
     </style>
     <div class="top-nav" style="margin-top: 30px; margin-right: 50px; margin-bottom: 30px;">
-        <img src="/images/logo.png" alt="사이트 로고" class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+        <img th:src="@{/images/logo.png}" alt="사이트 로고" class="logo" onclick="window.location.href='/'" onmousedown="if(event.button === 1) window.open('/', '_blank');" style="cursor: pointer;">
         <div style="float: right;">
             <div onclick="toggleProfileMenu()" style="cursor: pointer;">
                 <i class="fa-regular fa-circle-user fa-3x"></i>
@@ -33,13 +29,13 @@
             </div>
             <div id="profile-menu" style="display: none; position: absolute; right: 0; top: 100px; background: #333333; border-radius: 5px;">
                 <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="padding: 10px; cursor: pointer;"><a href="#">내 블로그</a></li>
+                    <li style="padding: 10px; cursor: pointer;"><a th:href="'/' + (${session.id} ? ${session.id} : 'login')">내 블로그</a></li>
                     <li style="padding: 10px; cursor: pointer;"><a href="#">설정</a></li>
                 </ul>
             </div>
         </div>
-        <a href="logout" class="loginOut" th:if="${session.id}">로그아웃</a>
-        <a href="login" class="loginOut" th:if="!${session.id}">로그인</a>
+        <a href="/logout" class="loginOut" th:if="${session.id}">로그아웃</a>
+        <a href="/login" class="loginOut" th:if="!${session.id}">로그인</a>
     </div>
     <script>
         function toggleProfileMenu() {

@@ -15,10 +15,14 @@
             border: 1px solid #444;
             border-radius: 8px;
             padding: 16px;
-            overflow: auto;
             margin: 16px 0;
             box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
             position: relative;
+            max-width: 100%;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            color: white;
         }
 
         code {
@@ -26,6 +30,16 @@
             font-size: 14px;
             line-height: 1.5;
             color: #d4d4d4;
+        }
+
+        /* 순서없는 리스트 스타일 */
+        ul {
+            padding-left: 20px;
+            margin-left: 0;
+        }
+
+        li {
+            list-style-position: inside;
         }
 
         /* 줄 번호 */
@@ -41,11 +55,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const rawContent = document.getElementById("raw-content").innerText;
-            document.getElementById("markdown-content").innerHTML = DOMPurify.sanitize(marked.parse(rawContent));
-
-            document.querySelectorAll('pre code').forEach((block) => {
-                hljs.highlightElement(block);
-            });
+            document.getElementById("markdown-content").innerHTML = DOMPurify.sanitize(marked.parse(rawContent), {SAFE_FOR_TEMPLATES: true});
+            document.querySelectorAll('pre code').forEach(hljs.highlightElement);
             hljs.initLineNumbersOnLoad();
         });
     </script>

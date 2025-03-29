@@ -33,7 +33,6 @@
         /* 게시물 */
         .board-container {
             width: 60%;
-            height: 1200px;
             margin: 0 auto;
         }
 
@@ -66,24 +65,25 @@
 
 <div class="board-container">
     <div class="board-item">
-        <div th:text="${board.title}" style="font-size: 3em; font-weight: 900; color: #333; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        <div th:text="${boardDto.title}" style="font-size: 3em; font-weight: 900; color: #333; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
  margin-bottom: 0.5em;">title</div>
-        <div th:text="${'최초 업로드: '+#dates.format(board.inDate,'yyyy-MM-dd hh:mm:ss')}" style="text-align: right;">최초 업로드: yyyy-MM-dd hh:mm:ss</div>
-        <div th:text="${'최근 수정 시간: '+#dates.format(board.upDate,'yyyy-MM-dd hh:mm:ss')}" style="text-align: right;">최근 수정 시간: yyyy-MM-dd hh:mm:ss</div>
-        <div th:text="${'게시자: '+board.user.name}" style="text-align: right;">게시자: none</div>
-        <div th:text="${'조회수: '+board.viewCnt}" style="text-align: right;">조회수: -1</div>
-        <div id="raw-content" th:text="${board.content}" style="display: none;">내용없음</div><br/>
-        <div id="markdown-content" style="white-space: pre-wrap;"></div>
-        <th:block th:if="${board.user.id == session.id}">
+        <div th:text="${'최초 업로드: '+#dates.format(boardDto.inDate,'yyyy-MM-dd HH:mm:ss')}" style="text-align: right;">최초 업로드: yyyy-MM-dd hh:mm:ss</div>
+        <div th:text="${'최근 수정 시간: '+#dates.format(boardDto.upDate,'yyyy-MM-dd HH:mm:ss')}" style="text-align: right;">최근 수정 시간: yyyy-MM-dd hh:mm:ss</div>
+        <div style="text-align: right;">
+            <a th:href="@{'/' + ${boardDto.userId}}"
+               th:text="${'게시자: '+boardDto.userName}"
+               style="color: blue; text-decoration: underline;">게시자: none</a>
+        </div>
+        <div th:text="${'카테고리: ' + boardDto.categoryName}" style="text-align: right;">카테고리: 없음</div>
+        <div th:text="${'조회수: ' + boardDto.viewCnt}" style="text-align: right;">조회수: -1</div>
+        <div id="raw-content" th:text="${boardDto.content}" style="display: none;">내용없음</div><br/>
+        <div id="markdown-content" style="line-height: 2;"></div>
+        <th:block th:if="${boardDto.userId == session.id}">
             <div style="text-align: right;">
-                <b>
-                    <a th:href="@{/edit(boardNum=${board.boardNum})}">수정하기</a>
-                </b>
-                <b>
-                    <a href="javascript:void(0);" onclick="deleteBoard()">삭제하기</a>
-                </b>
+                <a th:href="@{/edit(boardNum=${boardDto.boardNum})}" style="font-weight: bold;">수정하기</a>
+                <a href="javascript:void(0);" onclick="deleteBoard()" style="font-weight: bold;">삭제하기</a>
                 <form id="deleteForm" th:action="@{/delete}" method="post">
-                    <input type="hidden" th:value="${board.boardNum}" name="boardNum">
+                    <input type="hidden" th:value="${boardDto.boardNum}" name="boardNum">
                 </form>
             </div>
         </th:block>

@@ -1,6 +1,7 @@
 package kr.kro.projectbpm.service;
 
 import kr.kro.projectbpm.domain.User;
+import kr.kro.projectbpm.dto.UserDto;
 import kr.kro.projectbpm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,15 +10,29 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final EncodeService encodeService;
 
     @Override
-    public User getUserById(String id) {
-        return userRepository.findById(id).orElse(null);
+    public UserDto getUserById(String id) {
+        try {
+            return new UserDto(userRepository.findUserById(id));
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDto getUserByEmail(String email) {
+        try {
+            return new UserDto(userRepository.findUserByEmail(email));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String getUserNameById(String id) {
+        return getUserById(id).getName();
     }
 
     @Override
@@ -36,7 +51,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
-        userRepository.save(user);
+    public void save(UserDto userDto) {
+        userRepository.save(new User(userDto));
+        changePassword(userDto, userDto.getPassword()); // 비밀번호 변환
+    }
+
+    @Override
+    public void changePassword(UserDto userDto, String password) {
+        User user = userRepository.findUserById(userDto.getId());
+        user.changePassword(encodeService.encodePassword(password));
     }
 }

@@ -7,12 +7,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component
-public class GlobeInterceptor implements HandlerInterceptor {
+public class GlobalInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-//        if(modelAndView != null) {
-//            modelAndView.addObject("isLogin", request.getSession().getAttribute("id")!=null);
-//        }
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 }

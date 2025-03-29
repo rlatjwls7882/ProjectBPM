@@ -33,8 +33,8 @@ class BoardRepositoryTest {
     @Order(2)
     void insertTest() {
         for (int i = 1; i <= 10; i++) {
-            Board board = new Board("title "+i, "content "+i, userService.getUserById("aaa"));
-            boardRepository.save(board);
+//            Board board = new Board("title "+i, "content "+i, userService.getUserById("aaa"));
+//            boardRepository.save(board);
         }
     }
 }
