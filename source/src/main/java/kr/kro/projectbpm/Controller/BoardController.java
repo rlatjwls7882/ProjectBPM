@@ -80,8 +80,8 @@ public class BoardController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, Model model) {
-        model.addAttribute("boardList", boardService.getLists(sort, query));
+    public String search(@RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "0") int page, Model model) {
+        model.addAttribute("boardList", boardService.getLists(sort, query, page-1));
         model.addAttribute("query", query);
         model.addAttribute("sort", sort);
         return "views/home";

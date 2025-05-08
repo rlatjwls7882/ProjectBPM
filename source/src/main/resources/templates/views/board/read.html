@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>글 읽기</title>
+    <title>[[${boardDto.title}]]</title>
+    <meta name="category" th:content="${boardDto.categoryName}"/>
+    <meta name="description" th:content="${boardDto.content}"/>
+    <meta name="userId" th:content="${boardDto.userId}"/>
+    <meta name="userName" th:content="${boardDto.userName}"/>
     <style>
         /* 버튼 스타일 */
         button {
@@ -25,14 +29,9 @@
             font-family: "Noto Sans KR", sans-serif;
         }
 
-        a {
-            text-decoration: none;
-            color: black;
-        }
-
         /* 게시물 */
         .board-container {
-            width: 60%;
+            width: 70%;
             margin: 0 auto;
         }
 
@@ -70,18 +69,18 @@
         <div th:text="${'최초 업로드: '+#dates.format(boardDto.inDate,'yyyy-MM-dd HH:mm:ss')}" style="text-align: right;">최초 업로드: yyyy-MM-dd hh:mm:ss</div>
         <div th:text="${'최근 수정 시간: '+#dates.format(boardDto.upDate,'yyyy-MM-dd HH:mm:ss')}" style="text-align: right;">최근 수정 시간: yyyy-MM-dd hh:mm:ss</div>
         <div style="text-align: right;">
-            <a th:href="@{'/' + ${boardDto.userId}}"
+            <a th:href="@{'/user/' + ${boardDto.userId}}"
                th:text="${'게시자: '+boardDto.userName}"
                style="color: blue; text-decoration: underline;">게시자: none</a>
         </div>
         <div th:text="${'카테고리: ' + boardDto.categoryName}" style="text-align: right;">카테고리: 없음</div>
         <div th:text="${'조회수: ' + boardDto.viewCnt}" style="text-align: right;">조회수: -1</div>
-        <div id="raw-content" th:text="${boardDto.content}" style="display: none;">내용없음</div><br/>
+        <textarea id="raw-content" th:text="${boardDto.content}" style="display: none;">내용없음</textarea><br/>
         <div id="markdown-content" style="line-height: 2;"></div>
         <th:block th:if="${boardDto.userId == session.id}">
             <div style="text-align: right;">
-                <a th:href="@{/edit(boardNum=${boardDto.boardNum})}" style="font-weight: bold;">수정하기</a>
-                <a href="javascript:void(0);" onclick="deleteBoard()" style="font-weight: bold;">삭제하기</a>
+                <a th:href="@{/edit(boardNum=${boardDto.boardNum})}" style="text-decoration: none; color: black; font-weight: bold;">수정하기</a>
+                <a href="javascript:void(0);" onclick="deleteBoard()" style="text-decoration: none; color: black; font-weight: bold;">삭제하기</a>
                 <form id="deleteForm" th:action="@{/delete}" method="post">
                     <input type="hidden" th:value="${boardDto.boardNum}" name="boardNum">
                 </form>
@@ -90,6 +89,11 @@
     </div>
 </div>
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const rawContent = document.getElementById("raw-content").value;
+        const markdownContent =  document.getElementById("markdown-content");
+        addCodeBlock(rawContent, markdownContent);
+    });
     function deleteBoard() {
         if (confirm("정말 삭제하시겠습니까?")) {
             document.getElementById("deleteForm").submit();

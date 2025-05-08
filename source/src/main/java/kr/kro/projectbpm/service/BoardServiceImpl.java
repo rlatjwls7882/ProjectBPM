@@ -2,10 +2,14 @@ package kr.kro.projectbpm.service;
 
 import kr.kro.projectbpm.domain.Board;
 import kr.kro.projectbpm.dto.BoardDto;
+import kr.kro.projectbpm.dto.UserDto;
 import kr.kro.projectbpm.repository.BoardRepository;
 import kr.kro.projectbpm.repository.CategoryRepository;
 import kr.kro.projectbpm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +23,8 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private static final int PAGE_SIZE = 10;
+    private static final Sort latest = Sort.by(Sort.Order.desc("boardNum"));
 
     private LocalDateTime getStartTime(String sortType) {
         switch (sortType) {
@@ -35,42 +41,50 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardDto> getLists() {
-        return getLists("latest", "");
+    public List<BoardDto> getBoards() {
+        return ((List<Board>) boardRepository.findAll()).stream().map(BoardDto::new).toList();
     }
 
     @Override
-    public List<BoardDto> getLists(String sortType) {
-        return getLists(sortType, "");
+    public long getBoardCnt(UserDto userDto) {
+        return boardRepository.countBoardsByUserId(userDto.getId());
     }
 
     @Override
-    public List<BoardDto> getLists(String sortType, String query) {
+    public Page<BoardDto> getLists() {
+        return getLists("latest", "", 0);
+    }
+
+    @Override
+    public Page<BoardDto> getLists(String sortType, String query, int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, latest);
         if(sortType.equals("latest")) {
-            return boardRepository.findByTitleContainingIgnoreCase(query, Sort.by(Sort.Order.desc("boardNum"))).stream().map(BoardDto::new).toList();
+            return boardRepository.findByTitleContainingIgnoreCase(query, pageable).map(BoardDto::new);
         } else {
             LocalDateTime start = getStartTime(sortType);
-            return boardRepository.findBoardsSortedByViews(start, query).stream().map(BoardDto::new).toList();
+            return boardRepository.findBoardsSortedByViews(start, query, pageable).map(BoardDto::new);
         }
     }
 
     @Override
-    public List<BoardDto> getLists(String sortType, String query, String id) {
+    public Page<BoardDto> getLists(String sortType, String query, String id, int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, latest);
         if(sortType.equals("latest")) {
-            return boardRepository.findByUserIdAndTitleContainingIgnoreCase(id, query, Sort.by(Sort.Order.desc("boardNum"))).stream().map(BoardDto::new).toList();
+            return boardRepository.findByUserIdAndTitleContainingIgnoreCase(id, query, pageable).map(BoardDto::new);
         } else {
             LocalDateTime start = getStartTime(sortType);
-            return boardRepository.findBoardsByUserIdSortedByViews(id, start, query).stream().map(BoardDto::new).toList();
+            return boardRepository.findBoardsByUserIdSortedByViews(id, start, query, pageable).map(BoardDto::new);
         }
     }
 
     @Override
-    public List<BoardDto> getLists(long categoryNum, String sortType) {
+    public Page<BoardDto> getLists(long categoryNum, String sortType, int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, latest);
         if(sortType.equals("latest")) {
-            return boardRepository.findBoardsByCategoryNum(categoryNum).stream().map(BoardDto::new).toList();
+            return boardRepository.findBoardsByCategoryNum(categoryNum, pageable).map(BoardDto::new);
         } else {
             LocalDateTime start = getStartTime(sortType);
-            return boardRepository.findBoardsByCategoryNumSortedByViews(categoryNum, start).stream().map(BoardDto::new).toList();
+            return boardRepository.findBoardsByCategoryNumSortedByViews(categoryNum, start, pageable).map(BoardDto::new);
         }
     }
 
@@ -90,6 +104,12 @@ public class BoardServiceImpl implements BoardService {
     public BoardDto getBoard(long boardNum) {
         return new BoardDto(boardRepository.findByBoardNum(boardNum));
     }
+
+    @Override
+    public long countByCategoryNum(long categoryNum) {
+        return boardRepository.countByCategoryNum(categoryNum);
+    }
+
 
     @Override
     public void deleteBoard(long boardNum) {

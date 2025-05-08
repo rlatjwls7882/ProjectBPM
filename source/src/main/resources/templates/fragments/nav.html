@@ -27,9 +27,9 @@
                 <i class="fa-regular fa-circle-user fa-3x"></i>
                 <i class="fa-solid fa-chevron-down" style="margin-left: 5px;"></i>
             </div>
-            <div id="profile-menu" style="display: none; position: absolute; right: 0; top: 100px; background: #333333; border-radius: 5px;">
+            <div id="profile-menu" style="display: none; position: absolute; right: 10px; top: 100px; background: #333333; border-radius: 5px;">
                 <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="padding: 10px; cursor: pointer;"><a th:href="'/' + (${session.id} ? ${session.id} : 'login')">내 블로그</a></li>
+                    <li style="padding: 10px; cursor: pointer;"><a th:href="'/' + (${session.id} ? ${'user/'+session.id} : 'login')">내 블로그</a></li>
                     <li style="padding: 10px; cursor: pointer;"><a href="#">설정</a></li>
                 </ul>
             </div>

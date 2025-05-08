@@ -53,13 +53,13 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(String id, String password, boolean remember, RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response) {
+    public String login(String id, String password, boolean remember, RedirectAttributes redirectAttributes, HttpSession session, HttpServletResponse response) {
         UserDto userDto = userService.getUserById(id);
         if(userDto!=null && encodeService.encodePassword(password).equals(userDto.getPassword())) {
-            HttpSession session = request.getSession();
             session.setAttribute("id", userDto.getId());
 
             Cookie cookie = new Cookie("id", userDto.getId());
+            cookie.setMaxAge(60*60*24*30); // 30일
             if(!remember) {
                 cookie.setMaxAge(0);
             }

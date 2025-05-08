@@ -68,25 +68,26 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{id}")
-    public String myBlog(@PathVariable String id, @RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, Model model) {
+    @GetMapping("/user/{id}")
+    public String myBlog(@PathVariable String id, @RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "1") int page, Model model) {
         try {
-            model.addAttribute("boardList", boardService.getLists(sort, query, id));
+            model.addAttribute("boardList", boardService.getLists(sort, query, id, page-1));
             model.addAttribute("query", query);
             model.addAttribute("sort", sort);
             UserDto userDto = userService.getUserById(id);
             userDto.setViewCnt(viewService.getViewCnt(userDto, "today"));
             model.addAttribute("userDto", userDto);
+            model.addAttribute("boardCnt", boardService.getBoardCnt(userDto));
             return "views/user/userPage";
         } catch (Exception e) {
             return "redirect:/";
         }
     }
 
-    @GetMapping("/{id}/category/{categoryNum}")
-    public String myBlogCategory(@PathVariable String id, @PathVariable long categoryNum, @RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, Model model) {
+    @GetMapping("/user/{id}/category/{categoryNum}")
+    public String myBlogCategory(@PathVariable String id, @PathVariable long categoryNum, @RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "1") int page, Model model) {
         try {
-            model.addAttribute("boardList", boardService.getLists(categoryNum, sort));
+            model.addAttribute("boardList", boardService.getLists(categoryNum, sort, page-1));
             model.addAttribute("query", query);
             model.addAttribute("sort", sort);
 
@@ -96,6 +97,7 @@ public class UserController {
             UserDto userDto = userService.getUserById(id);
             userDto.setViewCnt(viewService.getViewCnt(userDto, "today"));
             model.addAttribute("userDto", userDto);
+            model.addAttribute("boardCnt", boardService.countByCategoryNum(categoryNum));
             return "views/user/userPage";
         } catch (Exception e) {
             return "redirect:/";
