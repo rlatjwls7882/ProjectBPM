@@ -1,7 +1,6 @@
 # 🧠 ProjectBPM
 ## 🔗 배포 링크
-* [정식 배포 사이트](https://projectbpm.koyeb.app) <br>
-* [개발중인 사이트](http://projectBPM.kro.kr)
+* [정식 배포 사이트](http://projectBPM.kro.kr)
 
 ## 📌 개요
 ProjectBPM은 게시판 기능 중심의 웹 애플리케이션입니다.
@@ -17,7 +16,7 @@ ProjectBPM은 게시판 기능 중심의 웹 애플리케이션입니다.
 | **Frontend**   | HTML5, CSS3, Thymeleaf, JavaScript          |
 | **Database**   | MySQL                                       |
 | **Build Tool** | Maven                                       |
-| **Deployment** | Koyeb, 내도메인.한국 (`projectbpm.kro.kr`)   |
+| **Deployment** | hostinger, 내도메인.한국 (`projectbpm.kro.kr`)   |
 
 ## 📂프로젝트 구조
 <details>
@@ -117,7 +116,7 @@ ProjectBPM은 게시판 기능 중심의 웹 애플리케이션입니다.
 * 사용자 전용 페이지 및 정보 수정
 
 ## 🧪 테스트 및 배포
-* Koyeb를 통한 무중단 배포
+* hostinger를 통한 무중단 배포
 * HTTPS 적용 (Let's Encrypt / keystore.p12)
 * robots.txt 및 sitemap.xml 구성
 * .well-known/acme-challenge로 도메인 인증 처리
