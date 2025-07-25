@@ -1,0 +1,41 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.error-container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-container h1 {
+    font-size: 5rem;
+    color: #999999;
+}
+
+.error-container p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.error-container .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #999999;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.error-container .btn:hover {
+    background-color: #888888;
+}

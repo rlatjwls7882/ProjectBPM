@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="fragment-header">
+    <title>fragment-header</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"
+
+    <!-- 기본 정보 -->
+    <meta name="author" content="rlatjwls7882">
+    <meta name="keywords" content="projectBPM, 블로그, 개인 프로젝트, 스프링 부트, 게시판">
+    <meta name="description" content="ProjectBPM은 JAVA - Spring Boot 기반 블로그 플랫폼입니다.">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ProjectBPM" />
+    <meta property="og:title" th:content="${boardDto} ? ${boardDto.title} : 'ProjectBPM - 블로그 플랫폼'" />
+    <meta property="og:description" th:content="${description} ?: 'Spring Boot 기반의 블로그 플랫폼입니다.'" />
+    <meta property="og:url" content="https://projectbpm.kro.kr/" />
+    <meta property="og:image" th:content="${ogImage} ?: 'https://projectbpm.kro.kr/images/og-default.png'" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" th:content="${boardDto} ? ${boardDto.title} : 'ProjectBPM - 블로그 플랫폼'" />
+    <meta name="twitter:description" th:content="${description} ?: 'Spring Boot 기반의 커뮤니티 블로그 플랫폼입니다.'" />
+    <meta name="twitter:image" th:content="${ogImage} ?: 'https://projectbpm.kro.kr/images/og-default.png'" />
+
+    <!-- Favicon & CSS -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <script src="https://use.fontawesome.com/releases/v6.7.2/js/all.js"></script>
+
+    <!-- JS Library -->
+    <!--  Jquery  --> <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <!--  DOMPurify(innerHtml의 XSS 취약점 보완)  --> <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
+
+    <!-- 메시지 alert 처리 -->
+    <script th:inline="javascript">
+        var msg = [[${msg}]];
+        if(msg === "login_success") alert("로그인 되었습니다.");
+        if(msg === "login_failed") alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+        if(msg === "register_success") alert("회원가입에 성공하였습니다.\n로그인을 진행해주세요.");
+        if(msg === "register_failed") alert("회원가입에 실패하였습니다.\n다시 시도해주세요.");
+        if(msg === "change_password_success") alert("비밀번호가 성공적으로 변경되었습니다.\n로그인을 진행해주세요.");
+        if(msg === "logout_success") alert("로그아웃 되었습니다.");
+        if(msg === "read_failed") alert("게시물을 읽어오는데 실패했습니다.");
+        if(msg === "write_success") alert("게시물이 등록되었습니다.");
+        if(msg === "write_failed") alert("게시물 등록에 실패하였습니다.");
+        if(msg === "delete_success") alert("게시물이 삭제되었습니다.");
+        if(msg === "delete_failed") alert("게시물 삭제에 실패했습니다.");
+        if(msg === "not_exist_id") alert("존재하지 않는 아이디입니다.");
+        if(msg === "edit_success") alert("게시물이 수정되었습니다.");
+        if(msg === "edit_failed") alert("게시물 수정에 실패했습니다.");
+        if(msg === "change_password_failed") alert("비밀번호 변경에 실패했습니다.\n다시 시도해주세요.");
+    </script>
+</head>
+</html>
