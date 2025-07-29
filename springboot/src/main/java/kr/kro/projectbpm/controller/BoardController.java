@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import kr.kro.projectbpm.common.util.SessionUtils;
 import kr.kro.projectbpm.dto.BoardDto;
 import kr.kro.projectbpm.service.BoardService;
 import kr.kro.projectbpm.service.CategoryService;
@@ -28,24 +29,30 @@ public class BoardController {
 
     @GetMapping("/write")
     public String write(Model model, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        if(id == null) {
+        try {
+            String id = SessionUtils.getUserIdOrThrow(session);
+            BoardDto boardDto = new BoardDto(id, userService.getUserName(id));
+            model.addAttribute("boardDto", boardDto);
+            model.addAttribute("categoryList", categoryService.getCategories(id));
+            return "views/board/write";
+        } catch (IllegalStateException e) { // 세션에 id가 없을 때
             session.setAttribute("beforeURL", "/write");
             return "redirect:/login/login";
+        } catch (Exception e) {
+            System.out.println("Error : write board(Get) = " + e);
+            return "redirect:/login/login";
         }
-        BoardDto boardDto = new BoardDto(id, userService.getUserNameById(id));
-        model.addAttribute("boardDto", boardDto);
-        model.addAttribute("categoryList", categoryService.getCategories(id));
-        return "views/board/write";
     }
 
     @PostMapping("/write")
     public String write(String title, String content, long categoryNum, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
-            long boardNum = boardService.createBoard(title, content, (String) session.getAttribute("id"), categoryNum);
+            String id = SessionUtils.getUserIdOrThrow(session);
+            long boardNum = boardService.createBoard(title, content, id, categoryNum);
             redirectAttributes.addFlashAttribute("msg", "write_success");
             return "redirect:/read/"+boardNum;
         } catch (Exception e) {
+            System.out.println("Error : write board(Post) = " + e);
             redirectAttributes.addFlashAttribute("msg", "write_failed");
             redirectAttributes.addFlashAttribute("title", title);
             redirectAttributes.addFlashAttribute("content", content);
@@ -79,13 +86,13 @@ public class BoardController {
             return "views/board/read";
         } catch (Exception e) {
             System.out.println("Error : read board(Get) = " + e);
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_OK);
             return "error/404";
         }
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "0") int page, Model model) {
+    public String search(@RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "1") int page, Model model) {
         model.addAttribute("boardList", boardService.getLists(sort, query, page-1));
         model.addAttribute("query", query);
         model.addAttribute("sort", sort);
@@ -93,12 +100,14 @@ public class BoardController {
     }
 
     @PostMapping("/delete")
-    public String delete(long boardNum, HttpSession session, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    public String delete(long boardNum, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
-            if(boardService.checkBoard(boardNum, session.getAttribute("id"))) throw new Exception("id 불일치");
+            String id = SessionUtils.getUserIdOrThrow(session);
+            if(boardService.checkBoard(boardNum, id)) throw new Exception("id 불일치");
             boardService.deleteBoard(boardNum);
             redirectAttributes.addFlashAttribute("msg", "delete_success");
         } catch(Exception e) {
+            System.out.println("Error : delete board(Post) = " + e);
             redirectAttributes.addFlashAttribute("msg", "delete_failed");
         }
         return "redirect:/";
@@ -107,7 +116,8 @@ public class BoardController {
     @GetMapping("/edit")
     public String edit(long boardNum, HttpServletResponse response, HttpSession session, Model model) {
         try {
-            if(boardService.checkBoard(boardNum, session.getAttribute("id"))) throw new Exception("id 불일치");
+            String id = SessionUtils.getUserIdOrThrow(session);
+            if(boardService.checkBoard(boardNum, id)) throw new Exception("id 불일치");
             BoardDto boardDto = boardService.getBoard(boardNum);
             boardDto.setEdit();
             model.addAttribute("boardDto", boardDto);
@@ -115,7 +125,7 @@ public class BoardController {
             return "views/board/write";
         } catch(Exception e) {
             System.out.println("Error : edit board(Get) = " + e);
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_OK);
             return "error/404";
         }
     }
@@ -123,11 +133,13 @@ public class BoardController {
     @PostMapping("/edit")
     public String edit(long boardNum, String title, String content, long categoryNum, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
-            if(boardService.checkBoard(boardNum, session.getAttribute("id"))) throw new Exception("id 불일치");
+            String id = SessionUtils.getUserIdOrThrow(session);
+            if(boardService.checkBoard(boardNum, id)) throw new Exception("id 불일치");
             boardService.editBoard(boardNum, title, content);
             categoryService.linkCategory(boardNum, categoryNum);
             redirectAttributes.addFlashAttribute("msg", "edit_success");
         } catch (Exception e) {
+            System.out.println("Error : edit board(Post) = " + e);
             redirectAttributes.addFlashAttribute("msg", "edit_failed");
         }
         return "redirect:/read/"+boardNum;

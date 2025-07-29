@@ -19,27 +19,29 @@ public class RegisterController {
     }
 
     @GetMapping("/register/terms")
-    public String register1() {
+    public String showTermsPage() {
         return "views/register/terms";
     }
 
     @GetMapping("/register/register")
-    public String register2() {
+    public String showRegisterForm() {
         return "views/register/registerForm";
     }
 
     @PostMapping("/register")
     public String register(UserDto userDto, RedirectAttributes redirectAttributes) {
-        if(userService.existsById(userDto.getId())) {
+        try {
+            if(userService.existsById(userDto.getId())) throw new IllegalStateException("이미 존재하는 사용자 ID입니다.");
+            userService.save(userDto);
+            redirectAttributes.addFlashAttribute("msg", "register_success");
+            return "redirect:/";
+        } catch(Exception e) {
+            System.out.println("회원가입 오류: " + e);
             redirectAttributes.addFlashAttribute("msg", "register_failed");
             redirectAttributes.addFlashAttribute("id", userDto.getId()); // 제출 폼으로 내용 채워진 채로 돌아가게
             redirectAttributes.addFlashAttribute("name", userDto.getName());
             redirectAttributes.addFlashAttribute("email", userDto.getEmail());
             return "redirect:/register/register";
-        } else {
-            userService.save(userDto);
-            redirectAttributes.addFlashAttribute("msg", "register_success");
-            return "redirect:/";
         }
     }
 }

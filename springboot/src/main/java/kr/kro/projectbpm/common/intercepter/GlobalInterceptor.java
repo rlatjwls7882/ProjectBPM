@@ -1,4 +1,4 @@
-package kr.kro.projectbpm;
+package kr.kro.projectbpm.common.intercepter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

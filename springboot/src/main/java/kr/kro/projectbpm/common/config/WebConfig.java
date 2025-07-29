@@ -1,5 +1,6 @@
-package kr.kro.projectbpm;
+package kr.kro.projectbpm.common.config;
 
+import kr.kro.projectbpm.common.intercepter.GlobalInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;

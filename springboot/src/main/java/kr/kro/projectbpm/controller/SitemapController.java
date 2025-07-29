@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -33,11 +35,14 @@ public class SitemapController {
                 .append("<changefreq>daily</changefreq>")
                 .append("<priority>1.0</priority></url>\n");
 
-        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+//        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        DateTimeFormatter isoFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
         // 개별 게시글
         for (BoardDto board : boards) {
-            String formattedDate = isoFormatter.format(board.getUpDate());
+//            String formattedDate = isoFormatter.format(board.getUpDate());
+            ZonedDateTime zdt = board.getUpDate().toInstant().atZone(ZoneId.systemDefault());
+            String formattedDate = isoFormatter.format(zdt);
             sb.append("<url>")
                     .append("<loc>").append(baseUrl).append("/read/").append(board.getBoardNum()).append("</loc>")
                     .append("<lastmod>").append(formattedDate).append("</lastmod>")

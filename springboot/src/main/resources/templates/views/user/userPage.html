@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${userDto.name + '님의 페이지'}">userName</title>
+    <title th:text="${userDto.name + '님의 글'}">userName</title>
     <link rel="stylesheet" href="/css/board.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
@@ -31,7 +31,7 @@
     <div class="board-container">
         <div style="display: flex; align-items: center; gap: 10px;">
             <i class="fa-regular fa-circle-user fa-3x"></i>
-            <h1 th:text="${userDto.name} + '님의 블로그'"></h1>
+            <h1 th:text="${userDto.name} + '님의 글'"></h1>
         </div>
         <h2 th:if="${categoryDto}" th:text="${'카테고리: '+categoryDto.name}"></h2>
         <h3 th:text="'총 조회수: '+${userDto.totalViewCnt}+', 오늘 조회수: '+${userDto.todayViewCnt}"></h3>

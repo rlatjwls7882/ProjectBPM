@@ -1,4 +1,4 @@
-package kr.kro.projectbpm;
+package kr.kro.projectbpm.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
