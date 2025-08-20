@@ -114,8 +114,8 @@
         function addCodeBlock(rawContent, markdownContent) {
             markdownContent.innerHTML = DOMPurify.sanitize(marked.parse(rawContent), {SAFE_FOR_TEMPLATES: true});
 
-            // MathJax.typesetPromise([markdownContent]); // LaTeX 수식 렌더링
-            mathJaxRendering(markdownContent);
+            MathJax.typesetPromise([markdownContent]); // LaTeX 수식 렌더링
+            // mathJaxRendering(markdownContent);
             document.querySelectorAll('pre code').forEach(hljs.highlightElement);
             hljs.initLineNumbersOnLoad();
 
@@ -143,27 +143,27 @@
             });
         }
 
-        function mathJaxRendering(htmlElement) {
-            const walk = document.createTreeWalker(htmlElement, NodeFilter.SHOW_TEXT, null, false);
-            while(walk.nextNode()) {
-                let text = walk.currentNode.nodeValue;
-
-                // 1) $$$$$$...$$$$$$ → $$...$$
-                text = text.replace(/\${6}([^$]+?)\${6}/g, (_, m) => `$$${m}$$`);
-
-                // 2) $$$...$$$ → $...$
-                text = text.replace(/\${3}([^$]+?)\${3}/g, (_, m) => `$${m}$`);
-
-                // 3) 남아 있는 연속된 $ (4개 이상) 정리
-                text = text.replace(/\${4,}/g, match =>
-                    match.length % 2 === 0 ? '$'.repeat(match.length / 2) : match
-                );
-
-                walk.currentNode.nodeValue = text;
-            }
-
-            MathJax.typesetPromise([htmlElement]);
-        }
+        // function mathJaxRendering(htmlElement) {
+        //     const walk = document.createTreeWalker(htmlElement, NodeFilter.SHOW_TEXT, null, false);
+        //     while(walk.nextNode()) {
+        //         let text = walk.currentNode.nodeValue;
+        //
+        //         // 1) $$$$$$...$$$$$$ → $$...$$
+        //         text = text.replace(/\${6}([^$]+?)\${6}/g, (_, m) => `$$${m}$$`);
+        //
+        //         // 2) $$$...$$$ → $...$
+        //         text = text.replace(/\${3}([^$]+?)\${3}/g, (_, m) => `$${m}$`);
+        //
+        //         // 3) 남아 있는 연속된 $ (4개 이상) 정리
+        //         text = text.replace(/\${4,}/g, match =>
+        //             match.length % 2 === 0 ? '$'.repeat(match.length / 2) : match
+        //         );
+        //
+        //         walk.currentNode.nodeValue = text;
+        //     }
+        //
+        //     MathJax.typesetPromise([htmlElement]);
+        // }
     </script>
 </head>
 </html>

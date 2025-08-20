@@ -40,7 +40,6 @@ public class User {
                 "id='" + id + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
-//                ", userNum='" + userNum + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
@@ -50,6 +49,7 @@ public class User {
         this.password = password;
         this.name = name;
         this.email = email;
+        this.totalViewCnt = 0L;
     }
 
     public User(UserDto userDto) {

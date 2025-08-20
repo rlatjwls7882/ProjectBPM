@@ -14,6 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * 게시글 조회 서비스 구현 클래스입니다.
+ * 이 클래스는 게시글 조회수 관리 기능을 제공합니다.
+ * @see ViewRepository
+ * @see BoardRepository
+ * @see UserRepository
+ */
 @Service
 @RequiredArgsConstructor
 public class ViewServiceImpl implements ViewService {
@@ -21,6 +28,10 @@ public class ViewServiceImpl implements ViewService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
+    /**
+     * 게시글을 생성합니다.
+     * @param boardDto 게시글 정보
+     */
     @Override
     public void createView(BoardDto boardDto) {
         Board board = boardRepository.findByBoardNum(boardDto.getBoardNum());
@@ -29,6 +40,12 @@ public class ViewServiceImpl implements ViewService {
         viewRepository.save(view);
     }
 
+    /**
+     * 게시글 조회수를 반환합니다.
+     * @param userDto 사용자 정보
+     * @param type 조회 기간 (today, week, month)
+     * @return 조회수
+     */
     @Override
     public long getViewCnt(UserDto userDto, String type) {
         User user = userRepository.findUserById(userDto.getId());

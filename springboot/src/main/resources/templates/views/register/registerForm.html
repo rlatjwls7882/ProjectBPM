@@ -92,8 +92,8 @@
         </label>
         <b>이름</b>
         <label style="display: flex; gap: 20px">
-            <input type="text" id="name" name="name" placeholder="사용하실 이름을 입력하세요." style="flex: 7" th:value="${name}" />
-            <button type="button" id="nameDuplicationCheck" style="flex: 3">중복 이름 확인</button>
+            <input type="text" id="name" name="name" placeholder="사용하실 닉네임을 입력하세요." style="flex: 7" th:value="${name}" />
+            <button type="button" id="nameDuplicationCheck" style="flex: 3">중복 닉네임 확인</button>
         </label>
         <b>이메일</b>
         <label style="display: flex; gap: 20px">
@@ -108,7 +108,7 @@
     </div>
 </form>
 <script>
-    /* 이름 중복 확인 */
+    /* 닉네임 중복 확인 */
     let permittedName = "";
     $("#nameDuplicationCheck").on("click", function() {
         $.ajax({
@@ -118,15 +118,15 @@
             data:{"name" : $("#name").val()},
             success: function(response) {
                 if(response) {
-                    alert("사용 가능한 이름입니다.");
+                    alert("사용 가능한 닉네임입니다.");
                     permittedName = $("#name").val();
                 } else {
-                    alert("이미 사용중인 이름입니다.");
+                    alert("이미 사용중인 닉네임입니다.");
                 }
             },
         });
     })
-    /* 이름 중복 확인 */
+    /* 닉네임 중복 확인 */
 
     /* 아이디 중복 확인 */
     let permittedId = "";

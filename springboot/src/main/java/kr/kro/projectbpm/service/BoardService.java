@@ -17,6 +17,6 @@ public interface BoardService {
     BoardDto getBoard(long boardNum);
     void deleteBoard(long boardNum);
     void editBoard(long boardNum, String title, String content);
-    boolean checkBoard(long boardNum, Object id);
+    void checkBoard(long boardNum, Object id);
     long countByCategoryNum(long categoryNum);
 }

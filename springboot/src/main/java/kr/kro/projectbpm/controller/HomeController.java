@@ -6,6 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * HomeController는 홈 페이지를 처리하는 컨트롤러입니다.
+ * 이 컨트롤러는 게시판 목록을 가져와서 홈 페이지에 표시합니다.
+ */
 @Controller
 @RequiredArgsConstructor
 public class HomeController {

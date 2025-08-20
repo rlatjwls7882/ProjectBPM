@@ -4,6 +4,8 @@
     <title>[[${boardDto.title}]]</title>
     <meta name="category" th:content="${boardDto.categoryName}"/>
     <meta name="description" th:content="${boardDto.content}"/>
+    <meta name="og:description" th:content="${boardDto.content}"/>
+    <meta name="twitter:description" th:content="${boardDto.content}"/>
     <meta name="userId" th:content="${boardDto.userId}"/>
     <meta name="userName" th:content="${boardDto.userName}"/>
     <style>
@@ -79,7 +81,7 @@
         <div id="markdown-content" style="line-height: 2;"></div>
         <th:block th:if="${boardDto.userId == session.id}">
             <div style="text-align: right;">
-                <a th:href="@{/edit(boardNum=${boardDto.boardNum})}" style="text-decoration: none; color: black; font-weight: bold;">수정하기</a>
+                <a th:href="'/edit/'+${boardDto.boardNum}" style="text-decoration: none; color: black; font-weight: bold;">수정하기</a>
                 <a href="javascript:void(0);" onclick="deleteBoard()" style="text-decoration: none; color: black; font-weight: bold;">삭제하기</a>
                 <form id="deleteForm" th:action="@{/delete}" method="post">
                     <input type="hidden" th:value="${boardDto.boardNum}" name="boardNum">

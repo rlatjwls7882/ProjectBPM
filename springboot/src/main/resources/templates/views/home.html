@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>ProjectBPM</title>
+    <meta name="description" content="ProjectBPM은 JAVA - Spring Boot 기반 블로그 플랫폼입니다.">
     <link rel="stylesheet" href="/css/board.css">
     <style>
         .page-button:hover {
@@ -30,7 +31,7 @@
                 </select>
             </div>
         </form>
-        <div class="board-item" th:each="boardDto : ${boardList}" th:attr="onclick='window.location.href=\'/read/' + ${boardDto.boardNum} + '\''"  th:attrappend="onmousedown='if(event.button == 1) window.open(\'/read?boardNum=' + ${boardDto.boardNum} + '\', \'_blank\');'">
+        <div class="board-item" th:each="boardDto : ${boardList}" th:attr="onclick='window.location.href=\'/read/' + ${boardDto.boardNum} + '\''"  th:attrappend="onmousedown='if(event.button == 1) window.open(\'/read/' + ${boardDto.boardNum} + '\', \'_blank\');'">
             <img src="/images/image.png" alt="게시물 이미지" style="width: 15px; height: 15px;">
             <div class="board-title" th:text="${boardDto.title}">게시물 제목</div>
             <div class="board-meta" th:text="'작성자: ' + ${boardDto.userName} + ' | 최초 등록일: ' + ${#dates.format(boardDto.inDate,'yyyy-MM-dd HH:mm:ss')} + ' | 조회수: ' + ${boardDto.viewCnt}">작성자: aaa | 등록일: 2025-01-01 10:00:00 | 조회수: 0</div>

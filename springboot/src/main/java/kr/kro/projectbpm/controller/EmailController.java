@@ -9,12 +9,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * EmailController는 이메일 인증 관련 요청을 처리하는 컨트롤러입니다.
+ * 이 컨트롤러는 이메일 인증 코드 전송, 인증 코드 확인 등을 담당합니다.
+ * @see EmailService
+ * @see UserService
+ */
 @Controller
 @RequiredArgsConstructor
 public class EmailController {
     private final EmailService emailService;
     private final UserService userService;
 
+    /**
+     * 이메일 인증 코드를 전송합니다.
+     * @param type 인증 유형 (회원가입, 아이디 찾기, 비밀번호 찾기 등)
+     * @param email 수신할 이메일 주소
+     * @param id 사용자 ID (회원가입 시 사용)
+     * @param session HTTP 세션
+     * @return 인증 코드 전송 성공 여부
+     */
     @PostMapping("/sendCode")
     public ResponseEntity<?> sendCode(String type, String email, String id, HttpSession session) {
         try {
@@ -30,6 +44,14 @@ public class EmailController {
         }
     }
 
+    /**
+     * 인증 코드의 내용을 생성합니다.
+     * @param type 인증 유형 (회원가입, 아이디 찾기, 비밀번호 찾기 등)
+     * @param email 수신할 이메일 주소
+     * @param id 사용자 ID (회원가입 시 사용)
+     * @param code 생성된 인증 코드
+     * @return HTML 형식의 인증 코드 내용
+     */
     private String getContent(String type, String email, String id, String code) {
         if(type.equals("register")) {
             return """
@@ -58,6 +80,12 @@ public class EmailController {
         }
     }
 
+    /**
+     * 인증 코드를 확인합니다.
+     * @param userCode 사용자가 입력한 인증 코드
+     * @param session HTTP 세션
+     * @return 인증 코드가 일치하는지 여부
+     */
     @PostMapping("/checkCode")
     public ResponseEntity<?> checkCode(String userCode, HttpSession session) {
         try {

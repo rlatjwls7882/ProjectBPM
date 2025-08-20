@@ -14,12 +14,22 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * 사이트맵을 생성하여 반환하는 컨트롤러입니다.
+ * 게시글 목록과 개별 게시글의 URL을 포함한 XML 형식의 사이트맵을 제공합니다.
+ * @see BoardService
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(produces = MediaType.APPLICATION_XML_VALUE)
 public class SitemapController {
     private final BoardService boardService;
 
+    /**
+     * 사이트맵 XML을 생성하여 반환합니다.
+     * @param request HttpServletRequest 객체
+     * @return 사이트맵 XML 문자열
+     */
     @GetMapping("/sitemap.xml")
     public String getSitemap(HttpServletRequest request) {
         List<BoardDto> boards = boardService.getBoards();
