@@ -1,22 +1,11 @@
-# ProjectBPM - 게시판 중심 웹 애플리케이션
-Spring Boot 기반의 게시판 플랫폼으로 사용자 인증, 게시글 CRUD, 카테고리 분류, 조회수 통계, Markdown 미리보기 등 실용 기능을 제공합니다.
+# ProjectBPM
+Spring Boot 기반의 게시판 플랫폼으로 로그인, 게시글 작성, 카테고리 분류, Markdown 파싱 기능을 제공합니다.
 
 ## 만든 이유
-웹 서비스 구조 전반을 직접 기획하고, 배포와 운영까지 풀스택 역량 강화를 위해 제작하였습니다. 실사용 가능한 게시판 기반 웹 플랫폼의 구성과 배포 경험을 목적으로 합니다.
+웹 서비스 구조를 기획하고, 배포와 운영 역량 강화를 위해 제작하였습니다.
 
 ## 성과
 ![](https://github.com/user-attachments/assets/adf9f58c-3f63-4c49-9b4e-9fecad312a20)
-
-## 주요 기능
-- 사용자 로그인 / 회원가입 / 로그아웃
-- 이메일 인증 (SMTP 연동)
-- 비밀번호는 BCrypt, 기타 개인정보는 AES-256 기반 암호화
-- 게시글 작성, 수정, 삭제 (Markdown 지원)
-- 카테고리 분류 및 필터링
-- 쿠키 기반 중복 방지 조회수 기록
-- Markdown 기반 글 작성 및 실시간 미리보기
-- 사용자 전용 페이지
-- SEO 최적화: robots.txt / sitemap.xml / favicon 포함
 
 ## 기술 스택
 | 구분       | 내용                                                                   |
@@ -32,12 +21,12 @@ Spring Boot 기반의 게시판 플랫폼으로 사용자 인증, 게시글 CRUD
 - **무중단 배포**: `Systemd` + `Nginx reverse proxy`를 이용한 무중단 배포 구성
 - **HTTPS 적용**: ZeroSSL + `.well-known/acme-challenge` → `keystore.p12` 인증서 등록
 - **도메인 설정**: `projectbpm.kro.kr` (내도메인.한국 사용)
-- **검색엔진 최적화**: `robots.txt`, `sitemap.xml`, `favicon.ico` 포함
+- **검색엔진 최적화**: `robots.txt`, `sitemap.xml`, `favicon.ico`
 
 ### 보안 처리 구조
-- 비밀번호는 `BCrypt` 해시 함수로 저장 (역방향 복호화 불가능)
-- 이메일 등 민감 정보는 `AES-256`으로 암호화 후 DB 저장
-- HTTPS 환경에서 모든 데이터 송수신 암호화
+- 비밀번호는 `BCrypt` 해시 함수로 저장
+- 개인정보는 `AES-256`으로 암호화 후 DB 저장
+- HTTPS 환경에서 데이터 송수신 암호화
 
 ### 환경 설정 (`application.properties`)
 ```
